@@ -1,0 +1,36 @@
+
+<nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
+
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                
+                <!-- Home -->
+                {% if page == "home" %}
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                {% else %}
+                    <a class="nav-link" href="#">Home</a>
+                {% endif %}
+
+                <!-- Schedule -->
+                {% if page == "schedule" %}
+                    <a class="nav-link active" aria-current="page" href="#">Schedule</a>
+                {% else %}
+                    <a class="nav-link" href="#">Schedule</a>
+                {% endif %}
+
+
+                <!-- Trends -->
+                {% if page == "trends" %}
+                    <a class="nav-link active" aria-current="page" href="#">Trends</a>
+                {% else %}
+                    <a class="nav-link" href="#">Trends</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
