@@ -6,38 +6,95 @@
 {% include "planner/subtemplates/header.html" with page="schedule" %}
 {% endblock %}
 
+
+{% block scripts %}
+    <script src="/static/fullcalendar-6.0.0/dist/index.global.js"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+          var calendarEl = document.getElementById('calendar');
+          var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',  // weekly schedule
+            selectable: true,             // can select boxes
+            nowIndicator: true,           // indicates what the current time is
+
+            slotMinTime: "06:00:00",
+            slotMaxTime: "30:00:00",      // exclusive of the last hour
+
+            allDaySlot: false,            // probably should be off
+            selectMirror: true,           // Draw a temporary event on select. 
+            slotLabelInterval: "01:00:00",
+            slotDuration: "00:15:00",     // default is 30
+
+            select: function (asdf) {
+              console.log(asdf);
+              // calendar.addEvent(asdf);
+            },
+
+            events: [
+              {
+                id: 'a',
+                title: 'my event',
+                start: '2022-12-14T22:35:00-05:00', 
+                end: '2022-12-15T00:00:00-05:00'
+              }
+            ]
+          });
+          calendar.render();
+        });
+        
+        /*
+
+        {start: Wed Dec 14 2022 22:00:00 GMT-0500 (Eastern Standard Time), 
+         end: Thu Dec 15 2022 00:00:00 GMT-0500 (Eastern Standard Time), 
+         startStr: '2022-12-14T22:00:00-05:00', 
+         endStr: '2022-12-15T00:00:00-05:00', 
+        allDay: false}
+        */
+      </script>
+{% endblock %}
+
 {% block body %}
+<br>
 <div class="container-sm">
-    <table class="table">
+    <!-- <table class="table table-bordered">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">Monday</th>
+            <th scope="col">Tuesday</th>
+            <th scope="col">Wednesday</th>
+            <th scope="col">Thursday</th>
+            <th scope="col">Friday</th>
+            <th scope="col">Saturday</th>
+            <th scope="col">Sunday</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
+            <tr style="height: 500px;">
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
         </tbody>
-    </table>
+    </table> -->
+
+    <div id='calendar'></div>
 </div>
+
+
 
 
 {% endblock %}
