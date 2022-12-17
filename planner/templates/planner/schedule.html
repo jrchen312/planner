@@ -10,7 +10,6 @@
 {% block scripts %}
     <script src="/static/fullcalendar-6.0.0/dist/index.global.js"></script>
     <script>
-
         document.addEventListener('DOMContentLoaded', function() {
           var calendarEl = document.getElementById('calendar');
           var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -23,8 +22,8 @@
 
             allDaySlot: false,            // probably should be off
             selectMirror: true,           // Draw a temporary event on select. 
-            slotLabelInterval: "01:00:00",
-            slotDuration: "00:15:00",     // default is 30
+            // slotLabelInterval: "01:00:00",
+            // slotDuration: "00:15:00",     // default is 30
 
             select: function (asdf) {
               console.log(asdf);

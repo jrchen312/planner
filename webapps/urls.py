@@ -20,5 +20,6 @@ from planner.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    path('', schedule, name="schedule"),
+    path('', timer, name="timer"),
+    path('schedule/', schedule, name="schedule"),
 ]

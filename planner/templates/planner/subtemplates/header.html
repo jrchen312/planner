@@ -1,26 +1,26 @@
 
 <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
 
-    <div class="container-fluid container-md">
-        <a class="navbar-brand" href="#">Navbar</a>
+    <div class="container-fluid container-md" style="max-width:1000px;">
+        <a class="navbar-brand" href="#">Timer App</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 
-                <!-- Home -->
-                {% if page == "home" %}
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <!-- Timer -->
+                {% if page == "timer" %}
+                    <a class="nav-link active" aria-current="page" href="{% url 'timer' %}">Timer</a>
                 {% else %}
-                    <a class="nav-link" href="#">Home</a>
+                    <a class="nav-link" href="{% url 'timer' %}">Timer</a>
                 {% endif %}
 
                 <!-- Schedule -->
                 {% if page == "schedule" %}
-                    <a class="nav-link active" aria-current="page" href="#">Schedule</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'schedule' %}">Schedule</a>
                 {% else %}
-                    <a class="nav-link" href="#">Schedule</a>
+                    <a class="nav-link" href="{% url 'schedule' %}">Schedule</a>
                 {% endif %}
 
 

@@ -1,0 +1,75 @@
+{% extends "planner/base.html" %}
+
+{% block title %}Timer{% endblock %}
+
+{% block header %}
+{% include "planner/subtemplates/header.html" with page="timer" %}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm" style="max-width:800px;">
+    <br>
+    <h2>Timers</h2>
+
+    <div class="row g-1">
+        <div class="col-md-9">
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+        </div>
+        <div class="col-md">
+            <div class="position-relative">
+                <div class="position-absolute top-0 end-0" style="white-space: nowrap;">
+                    <button class="btn btn-primary"><i class="bi bi-pencil-square"></i> Edit</button>
+                    <button class="btn btn-primary"><i class="bi bi-file-earmark-plus"></i> New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br><br>
+
+    <!-- Placeholder -->
+    <div id="event-cards"></div>
+
+    <!-- Example... -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">15-210</h5>
+            <div class="row">
+                <div class="col">
+                    <p class="card-text">
+                        Time allotted this week: 10 hours
+                    </p>
+                </div>
+                <div class="col">
+                    <button class="btn btn-success">Start a session</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">18-240</h5>
+            <div class="row">
+                <div class="col">
+                    <p class="card-text">
+                        Time allotted this week: 23 hours
+                    </p>
+                </div>
+                <div class="col">
+                    <button class="btn btn-danger">End Session</button>
+                    <p class="card-text">
+                        Elapsed time: 20:12
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}
