@@ -1,0 +1,7 @@
+{% if field.help_text %}
+    <small class="form-text text-muted">{{ field.help_text }}</small>
+{% endif %}
+
+{% for error in field.errors %}
+    <small class="form-text text-danger">{{ error }}</small>
+{% endfor %}

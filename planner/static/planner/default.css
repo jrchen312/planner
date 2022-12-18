@@ -1,0 +1,7 @@
+
+.form-control.no-validate-color:valid {
+    border-color: #ced4da;
+    padding-right: .75rem;
+    background: none;
+    width: 48px;
+}
