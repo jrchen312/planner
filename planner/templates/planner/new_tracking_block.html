@@ -51,8 +51,19 @@
 
         <!-- Example... -->
         <div class="card my-3">
+            <div class="card-header" style="height:48px;">
+                <div class="position-relative">
+                    <div class="position-absolute top-50 start-0">
+                        <h4 class="card-title">Event 1</h4>
+                    </div>
+                    <div class="position-absolute top-50 end-0">
+                        <!-- <button class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></button> -->
+                        <h4 style="cursor:pointer;"><i class="bi bi-x-lg"></i></h4>
+                    </div>
+                </div>
+            </div>
             <div class="card-body">
-                <h5 class="card-title">Event 1</h5>
+                
                 
                 <div class="row">
                     <div class="col-10 mb-3">
@@ -74,6 +85,10 @@
                 
 
                 <!-- User should be able to create a lot of these.  -->
+                <div id="new-meetings"></div>
+
+                <hr class="border border-secondary opacity-50 my-5">
+
                 <div class="row mb-3">
                     <div class="col-6">
                         <label for="id_start_time1" class="form-label">Start time</label>
@@ -86,7 +101,63 @@
                         <label for="id_end_time1" class="form-label">End time</label>
                         <input type="time" name="end_time1" class="form-control" required id="id_end_time1">
                         
+                        <div class="invalid-feedback">Please select an end time.</div>
+                    </div>
+                </div>
+
+                <div class="col-12 mb-3" id="buttons">
+                    <label for="id_mon1" class="form-label">Days</label><br>
+            
+                    <input type="checkbox" name="mon1" autocomplete="off" class="btn-check" id="id_mon1">
+                    <label class="btn btn-outline-secondary" for="id_mon1">M</label>
+
+                    <input type="checkbox" name="tues1" autocomplete="off" class="btn-check" id="id_tues1">
+                    <label class="btn btn-outline-secondary" for="id_tues1">T</label>
+
+                    <input type="checkbox" name="wed1" autocomplete="off" class="btn-check" id="id_wed1">
+                    <label class="btn btn-outline-secondary" for="id_wed1">W</label>
+
+                    <input type="checkbox" name="thurs1" autocomplete="off" class="btn-check" id="id_thurs1">
+                    <label class="btn btn-outline-secondary" for="id_thurs1">Th</label>
+
+                    <input type="checkbox" name="fri1" autocomplete="off" class="btn-check" id="id_fri1">
+                    <label class="btn btn-outline-secondary" for="id_fri1">F</label>
+
+                    <input type="checkbox" name="sat1" autocomplete="off" class="btn-check" id="id_sat1">
+                    <label class="btn btn-outline-secondary" for="id_sat1">Sa</label>
+
+                    <input type="checkbox" name="sun1" autocomplete="off" class="btn-check" id="id_sun1">
+                    <label class="btn btn-outline-secondary" for="id_sun1">Su</label>
+                    
+                </div>
+
+                <!-- Optional location field -->
+                <div class="col-12 mb-3">
+                    <label for="id_location1" class="form-label">Location</label>
+                    <input type="text" name="location1" class="form-control" id="id_location1">
+                </div>
+
+                <div>
+                    Remove
+                </div>
+
+
+
+                <hr class="border border-secondary opacity-50 my-5">
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="id_start_time1" class="form-label">Start time</label>
+                        <input type="time" name="start_time1" class="form-control" required id="id_start_time1">
+                        
                         <div class="invalid-feedback">Please select a start time.</div>
+                    </div>
+
+                    <div class="col-6">
+                        <label for="id_end_time1" class="form-label">End time</label>
+                        <input type="time" name="end_time1" class="form-control" required id="id_end_time1">
+                        
+                        <div class="invalid-feedback">Please select an end time.</div>
                     </div>
                 </div>
 
@@ -122,7 +193,11 @@
                     <input type="text" name="location1" class="form-control" id="id_location1">
                 </div>
                 
+            </div>
+            <!-- End of body -->
 
+            <div class="card-footer">
+                Add recurring meeting
             </div>
         </div>
 
