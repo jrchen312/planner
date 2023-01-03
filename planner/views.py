@@ -3,7 +3,11 @@ from planner.forms import TrackingBlockForm
 # Create your views here.
 
 def new_tracking_block(request):
+    if request.method == 'POST':
+        print(request.POST)
+
     form = TrackingBlockForm()
+
     return render(request, "planner/new_tracking_block.html", {"form":form})
 
 def timer(request):

@@ -7,6 +7,9 @@ $( document ).ready(function() {
     
     // "Add recurring meeting" button functionality
     // $("#add-meeting").click(function () {})
+
+    // Fill out the hidden form for the timezone. 
+    $("#id_timezone").val(Intl.DateTimeFormat().resolvedOptions().timeZone);
 });
 
 
@@ -147,4 +150,11 @@ function add_meeting(event_id) {
     $(`#remove-meeting-${event_id}-${meeting_idx}`).click(function () {
         $(`#event-${event_id}-meeting-${meeting_idx}`).remove();
     });
+}
+
+
+
+function submit_form() {
+    let res = {};
+    
 }

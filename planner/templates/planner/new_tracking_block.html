@@ -16,7 +16,7 @@
 {% block body %}
 
 <!-- form -->
-<form action="#" method="POST" class="container-sm mx-auto needs-validation" style="max-width:800px;" novalidate>
+<form action="{% url 'new-tracking-block' %}" method="POST" class="container-sm mx-auto needs-validation" style="max-width:800px;" novalidate>
     {% csrf_token %}
 
     <h2 class="my-3">New Tracking Block</h2>

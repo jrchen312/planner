@@ -1,0 +1,96 @@
+<div class="card my-5 text-bg-light">
+    <div class="card-body">
+
+        <div class="row mb-3">
+            <div class="col-6">
+                <label for="id_start_time-${meeting_idx}" class="form-label">Start time</label>
+                <input type="time" name="start_time-${meeting_idx}" class="form-control" required id="id_start_time-${meeting_idx}">
+                
+                <div class="invalid-feedback">Please select a start time.</div>
+            </div>
+
+            <div class="col-6">
+                <label for="id_end_time-${meeting_idx}" class="form-label">End time</label>
+                <input type="time" name="end_time-${meeting_idx}" class="form-control" required id="id_end_time-${meeting_idx}">
+                
+                <div class="invalid-feedback">Please select an end time.</div>
+            </div>
+        </div>
+
+        <div class="col-12 mb-3" id="buttons">
+            <label for="id_mon-${meeting_idx}" class="form-label">Days</label><br>
+    
+            <input type="checkbox" name="mon-${meeting_idx}" autocomplete="off" class="btn-check" id="id_mon-${meeting_idx}">
+            <label class="btn btn-outline-secondary" for="id_mon-${meeting_idx}">M</label>
+
+            <input type="checkbox" name="tues-${meeting_idx}" autocomplete="off" class="btn-check" id="id_tues-${meeting_idx}">
+            <label class="btn btn-outline-secondary" for="id_tues-${meeting_idx}">T</label>
+
+            <input type="checkbox" name="wed-${meeting_idx}" autocomplete="off" class="btn-check" id="id_wed-${meeting_idx}">
+            <label class="btn btn-outline-secondary" for="id_wed-${meeting_idx}">W</label>
+
+            <input type="checkbox" name="thurs-${meeting_idx}" autocomplete="off" class="btn-check" id="id_thurs-${meeting_idx}">
+            <label class="btn btn-outline-secondary" for="id_thurs-${meeting_idx}">Th</label>
+
+            <input type="checkbox" name="fri-${meeting_idx}" autocomplete="off" class="btn-check" id="id_fri-${meeting_idx}">
+            <label class="btn btn-outline-secondary" for="id_fri-${meeting_idx}">F</label>
+
+            <input type="checkbox" name="sat-${meeting_idx}" autocomplete="off" class="btn-check" id="id_sat-${meeting_idx}">
+            <label class="btn btn-outline-secondary" for="id_sat-${meeting_idx}">Sa</label>
+
+            <input type="checkbox" name="sun-${meeting_idx}" autocomplete="off" class="btn-check" id="id_sun-${meeting_idx}">
+            <label class="btn btn-outline-secondary" for="id_sun-${meeting_idx}">Su</label>
+            
+        </div>
+
+        <!-- Optional location field -->
+        <div class="col-12 mb-3">
+            <label for="id_location-${meeting_idx}" class="form-label">Location</label>
+            <input type="text" name="location-${meeting_idx}" class="form-control" id="id_location-${meeting_idx}">
+        </div>
+
+        <div>
+            <span class="remove-meeting-btn" id="remove-meeting-${meeting_idx}" title="Remove Meeting">
+                Remove
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<QueryDict: {'csrfmiddlewaretoken': ['xFaBvohKEtaQofHVkD6EdL1Z80jMqgBvduqAxossyihPeXiBAdA7eiXKfc0bBnjO'], 
+'name': ['asdf'], 
+'start_date': ['2023-01-03'], 
+'end_date': ['2023-01-04'], 
+'timezone': ['America/Denver'], 
+'number_events': 2,
+    'event_0':
+        'name': ,
+        'number_meetings': 1,
+            'meeting_0':
+                'start_time'
+                'end_time'
+                'mon', 'tues', ..., 'sun'
+                'location'
+
+
+
+                
+    'name-0': ['asdf'], 
+        'start_time-0-2': ['11:48'], 
+        'end_time-0-2': ['11:49'], 
+        'thurs-0-2': ['on'], 
+        'sun-0-2': ['on'], 
+        'location-0-2': ['asdf'], 
+    'name-1': ['asdf2'], 
+        'start_time-1-0': ['01:48'], 
+        'end_time-1-0': ['02:48'], 
+        'mon-1-0': ['on'], 
+        'tues-1-0': ['on'], 
+        'wed-1-0': ['on'], 
+        'thurs-1-0': ['on'], 
+        'fri-1-0': ['on'], 
+        'sat-1-0': ['on'], 
+        'sun-1-0': ['on'], 
+        'location-1-0': ['asdf2']}
+>
