@@ -4,6 +4,10 @@
 
 {% block title %}New Tracking Block{% endblock %}
 
+{% block scripts %}
+<script src="../../static/planner/new_tracking_block.js"></script>
+{% endblock %}
+
 {% block header %}
 {% include "planner/subtemplates/header.html" with page="new_block" %}
 {% endblock %}
@@ -41,178 +45,25 @@
         </div>
     </div>
 
-    <!-- <div class="col-12 mb-3">
-        <label for="colorInput1" class="form-label">Choose a Color</label>
-        <input type="color" class="form-control form-control-color" id="colorInput1" value="#563d7c" title="Choose a color for the event">
-    </div> -->
+    <!-- Keep track of timezone here as hidden field. -->
+    {{ form.timezone.as_hidden }}
     
     <!-- placeholder for everything else -->
-    <div id="form-placement">
-
-        <!-- Example... -->
-        <div class="card my-3">
-            <div class="card-header" style="height:48px;">
-                <div class="position-relative">
-                    <div class="position-absolute top-50 start-0">
-                        <h4 class="card-title">Event 1</h4>
-                    </div>
-                    <div class="position-absolute top-50 end-0">
-                        <!-- <button class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></button> -->
-                        <h4 style="cursor:pointer;"><i class="bi bi-x-lg"></i></h4>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                
-                
-                <div class="row">
-                    <div class="col-10 mb-3">
-                        <label for="id_name1" class="form-label">Name</label>
-                        <input type="text" name="name1" class="form-control" required id="id_name1">
-                    
-                        <div class="invalid-feedback">Please choose a name.</div>
-                    </div>
-                    
-                    <div class="col mb-3">
-                        <div class="position-relative">
-                            <div class="position-absolute top-0 end-0">
-                                <label for="colorInput1" class="form-label">Color</label>
-                                <input type="color" class="form-control no-validate-color form-control-color" id="colorInput1" value="#563d7c" title="Choose a color for the event">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-
-                <!-- User should be able to create a lot of these.  -->
-                <div id="new-meetings"></div>
-
-                <hr class="border border-secondary opacity-50 my-5">
-
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label for="id_start_time1" class="form-label">Start time</label>
-                        <input type="time" name="start_time1" class="form-control" required id="id_start_time1">
-                        
-                        <div class="invalid-feedback">Please select a start time.</div>
-                    </div>
-
-                    <div class="col-6">
-                        <label for="id_end_time1" class="form-label">End time</label>
-                        <input type="time" name="end_time1" class="form-control" required id="id_end_time1">
-                        
-                        <div class="invalid-feedback">Please select an end time.</div>
-                    </div>
-                </div>
-
-                <div class="col-12 mb-3" id="buttons">
-                    <label for="id_mon1" class="form-label">Days</label><br>
-            
-                    <input type="checkbox" name="mon1" autocomplete="off" class="btn-check" id="id_mon1">
-                    <label class="btn btn-outline-secondary" for="id_mon1">M</label>
-
-                    <input type="checkbox" name="tues1" autocomplete="off" class="btn-check" id="id_tues1">
-                    <label class="btn btn-outline-secondary" for="id_tues1">T</label>
-
-                    <input type="checkbox" name="wed1" autocomplete="off" class="btn-check" id="id_wed1">
-                    <label class="btn btn-outline-secondary" for="id_wed1">W</label>
-
-                    <input type="checkbox" name="thurs1" autocomplete="off" class="btn-check" id="id_thurs1">
-                    <label class="btn btn-outline-secondary" for="id_thurs1">Th</label>
-
-                    <input type="checkbox" name="fri1" autocomplete="off" class="btn-check" id="id_fri1">
-                    <label class="btn btn-outline-secondary" for="id_fri1">F</label>
-
-                    <input type="checkbox" name="sat1" autocomplete="off" class="btn-check" id="id_sat1">
-                    <label class="btn btn-outline-secondary" for="id_sat1">Sa</label>
-
-                    <input type="checkbox" name="sun1" autocomplete="off" class="btn-check" id="id_sun1">
-                    <label class="btn btn-outline-secondary" for="id_sun1">Su</label>
-                    
-                </div>
-
-                <!-- Optional location field -->
-                <div class="col-12 mb-3">
-                    <label for="id_location1" class="form-label">Location</label>
-                    <input type="text" name="location1" class="form-control" id="id_location1">
-                </div>
-
-                <div>
-                    Remove
-                </div>
-
-
-
-                <hr class="border border-secondary opacity-50 my-5">
-
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label for="id_start_time1" class="form-label">Start time</label>
-                        <input type="time" name="start_time1" class="form-control" required id="id_start_time1">
-                        
-                        <div class="invalid-feedback">Please select a start time.</div>
-                    </div>
-
-                    <div class="col-6">
-                        <label for="id_end_time1" class="form-label">End time</label>
-                        <input type="time" name="end_time1" class="form-control" required id="id_end_time1">
-                        
-                        <div class="invalid-feedback">Please select an end time.</div>
-                    </div>
-                </div>
-
-                <div class="col-12 mb-3" id="buttons">
-                    <label for="id_mon1" class="form-label">Days</label><br>
-            
-                    <input type="checkbox" name="mon1" autocomplete="off" class="btn-check" id="id_mon1">
-                    <label class="btn btn-outline-secondary" for="id_mon1">M</label>
-
-                    <input type="checkbox" name="tues1" autocomplete="off" class="btn-check" id="id_tues1">
-                    <label class="btn btn-outline-secondary" for="id_tues1">T</label>
-
-                    <input type="checkbox" name="wed1" autocomplete="off" class="btn-check" id="id_wed1">
-                    <label class="btn btn-outline-secondary" for="id_wed1">W</label>
-
-                    <input type="checkbox" name="thurs1" autocomplete="off" class="btn-check" id="id_thurs1">
-                    <label class="btn btn-outline-secondary" for="id_thurs1">Th</label>
-
-                    <input type="checkbox" name="fri1" autocomplete="off" class="btn-check" id="id_fri1">
-                    <label class="btn btn-outline-secondary" for="id_fri1">F</label>
-
-                    <input type="checkbox" name="sat1" autocomplete="off" class="btn-check" id="id_sat1">
-                    <label class="btn btn-outline-secondary" for="id_sat1">Sa</label>
-
-                    <input type="checkbox" name="sun1" autocomplete="off" class="btn-check" id="id_sun1">
-                    <label class="btn btn-outline-secondary" for="id_sun1">Su</label>
-                    
-                </div>
-
-                <!-- Optional location field -->
-                <div class="col-12 mb-3">
-                    <label for="id_location1" class="form-label">Location</label>
-                    <input type="text" name="location1" class="form-control" id="id_location1">
-                </div>
-                
-            </div>
-            <!-- End of body -->
-
-            <div class="card-footer">
-                Add recurring meeting
-            </div>
-        </div>
-
-
-    </div>
+    <div id="form-placement" data-index="0"></div>
 
     <!-- Button to add new events -->
-    <div class="card my-3">
+    <div class="card my-4 p-3">
         <div class="card-body text-center">
-            <button class="btn btn-secondary"><i class="bi bi-plus-lg"></i></button>
+            <button class="btn btn-secondary" onclick="add_event(); return false;" title="Add a new event">
+                <i class="bi bi-plus-lg"></i>
+            </button>
         </div>
     </div>
 
     <!-- Submit -->
-    <button class="btn btn-success">Submit</button>
+    <div class="d-grid">
+        <button class="btn btn-success">Submit</button>
+    </div>
 </form>
 
 

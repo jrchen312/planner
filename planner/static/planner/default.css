@@ -6,4 +6,12 @@
     width: 52px;
 }
 
+.remove-meeting-btn {
+    cursor: pointer;
+    color:rgb(18, 107, 240);
+}
 
+.remove-meeting-btn:hover {
+    cursor: pointer;
+    color:rgb(255, 38, 38);
+}

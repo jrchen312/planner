@@ -8,7 +8,8 @@ class TrackingBlockForm(forms.Form):
     end_date = forms.DateField()
 
     name = forms.CharField()
-    color = forms.CharField()
+    
+    timezone = forms.CharField()
 
     
 
