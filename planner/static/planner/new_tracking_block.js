@@ -7,12 +7,26 @@ Edits: should keep track of the number of indecies.
 TODO: custom set of default colors that rotate around.
 */
 $( document ).ready(function() {
-    
-    // "Add recurring meeting" button functionality
-    // $("#add-meeting").click(function () {})
 
     // Fill out the hidden form for the timezone. 
     $("#id_timezone").val(Intl.DateTimeFormat().resolvedOptions().timeZone);
+
+
+    // custom form submission for the tracking form.
+    // does the bootstrap validation and custom form submission. 
+    let form = document.getElementById("tracking-form");
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        if (!form.checkValidity()) {
+            event.stopPropagation();
+        } else {
+            alert("seems good");
+            submit_form();
+        }
+        form.classList.add('was-validated');
+        
+    }, false);
+
 });
 
 
@@ -157,61 +171,73 @@ function add_meeting(event_idx) {
 
 
 
+
 function submit_form() {
     let res = {};
 
-    // TODO
-    res.csrfmiddlewaretoken = "";
+    res.csrfmiddlewaretoken = $('#tracking-form input[name=csrfmiddlewaretoken]').val();
 
     res.name = $("#id_name").val();
     res.start_date = $("#id_start_date").val();
     res.end_date = $("#id_end_date").val();
     res.timezone = $("#id_timezone").val();
 
-    // TODO
-    res.number_events = 0;
+    res.number_events = $("#form-placement").children().length;
 
     // for each children in the div...
     let counter = 0;
-    $("#form-placement").children().each(function(event) {
-        let event_idx = event.data("event-index"); // event index
+    $("#form-placement").children().each(function(index) {
+
+        let event_idx = $(this).data("event-index"); // event index
         let event_data = {};
+        
+        event_data.name =  $(`#id_name_${event_idx}`).val();
+        event_data.color = $(`#id_color_${event_idx}`).val();
 
-        event_data.name =  $(`#id_name_${event_idx}`);
-        event_data.color = $(`#id_color_${event_idx}`);
 
+        
         // for each meeting in the meetings div..
-        event_data.number_meetings = 0; //TODO
-        let meeting_counter = 0;
-        $(`#event-{event_idx}-meetings`).children().each(function(meeting) {
-            let meeting_idx = meeting.data("#meeting-index"); // meeting index
+        event_data.number_meetings = $(`#event-${event_idx}-meetings`).children().length;
 
+        let meeting_counter = 0;
+        $(`#event-${event_idx}-meetings`).children().each(function(meeting_index) {
+
+            let meeting_idx = $(this).data("meeting-index"); // meeting index
             let meeting_data = {};
 
             meeting_data.start_time = $(`#id_start_time-${event_idx}-${meeting_idx}`).val();
             meeting_data.end_time = $(`#id_end_time-${event_idx}-${meeting_idx}`).val();
 
-            meeting_data.mon = $(`#id_mon-${event_idx}-${meeting_idx}`).val();
-            meeting_data.tues = $(`#id_tues-${event_idx}-${meeting_idx}`).val();
-            meeting_data.wed = $(`#id_wed-${event_idx}-${meeting_idx}`).val();
-            meeting_data.thurs = $(`#id_thurs-${event_idx}-${meeting_idx}`).val();
-            meeting_data.fri = $(`#id_fri-${event_idx}-${meeting_idx}`).val();
-            meeting_data.sat = $(`#id_sat-${event_idx}-${meeting_idx}`).val();
-            meeting_data.sun = $(`#id_sun-${event_idx}-${meeting_idx}`).val();
+            meeting_data.mon = $(`#id_mon-${event_idx}-${meeting_idx}`).prop('checked');
+            meeting_data.tues = $(`#id_tues-${event_idx}-${meeting_idx}`).prop('checked');
+            meeting_data.wed = $(`#id_wed-${event_idx}-${meeting_idx}`).prop('checked');
+            meeting_data.thurs = $(`#id_thurs-${event_idx}-${meeting_idx}`).prop('checked');
+            meeting_data.fri = $(`#id_fri-${event_idx}-${meeting_idx}`).prop('checked');
+            meeting_data.sat = $(`#id_sat-${event_idx}-${meeting_idx}`).prop('checked');
+            meeting_data.sun = $(`#id_sun-${event_idx}-${meeting_idx}`).prop('checked');
 
             meeting_data.location = $(`#id_location-${event_idx}-${meeting_idx}`).val();
 
-            // (I think the ++ works). 
             event_data[`meeting_${meeting_counter ++}`] = meeting_data;
-
         });
-
+        
         // Done compiling the data for the event:
         res[`event_${counter ++}`] = event_data;
     });
-
+    
     // Done compiling all form data.
     
+    console.log(res);
+
+    $.ajax({
+        type: 'POST',
+        url: $('#tracking-form').prop('action'),
+        data: res,
+        // success: updateMapMarkers,
+        // error: updateError
+    });
+
+    // success function should redirect to elsewhere. 
 }
 
 

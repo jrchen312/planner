@@ -16,7 +16,7 @@
 {% block body %}
 
 <!-- form -->
-<form action="{% url 'new-tracking-block' %}" method="POST" class="container-sm mx-auto needs-validation" style="max-width:800px;" novalidate>
+<form action="{% url 'new-tracking-block' %}" method="POST" class="container-sm mx-auto needs-validation" style="max-width:800px;" id="tracking-form" novalidate>
     {% csrf_token %}
 
     <h2 class="my-3">New Tracking Block</h2>
@@ -66,28 +66,6 @@
     </div>
 </form>
 
-
-<script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (() => {
-      'use strict'
-    
-      // Fetch all the forms we want to apply custom Bootstrap validation styles to
-      const forms = document.querySelectorAll('.needs-validation')
-    
-      // Loop over them and prevent submission
-      Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-          if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-          }
-    
-          form.classList.add('was-validated')
-        }, false)
-      })
-    })()
-</script>
 
 {% endblock %}
 
