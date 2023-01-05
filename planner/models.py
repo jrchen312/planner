@@ -11,13 +11,15 @@ class Profile(models.Model):
 
 
 class TrackingBlock(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tracking_blocks")
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tracking_blocks", null=True)
 
     start = models.DateField()
     end = models.DateField()
 
     name = models.CharField(max_length=200)
-    description = models.CharField(max_length=500)
+    timezone = models.CharField(max_length=200)
+    
+    description = models.CharField(max_length=500, blank=True)
 
 
 class Event(models.Model):
@@ -34,7 +36,7 @@ class CalendarItem(models.Model):
 
     location = models.CharField(blank=True, max_length=200)
 
-    startTime = models.DateField()
-    endTime = models.DateField(null=True)
+    startTime = models.DateTimeField()
+    endTime = models.DateTimeField(null=True)
 
 
