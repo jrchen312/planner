@@ -16,11 +16,10 @@ $( document ).ready(function() {
     // does the bootstrap validation and custom form submission. 
     let form = document.getElementById("tracking-form");
     form.addEventListener('submit', event => {
-        event.preventDefault();
         if (!form.checkValidity()) {
+            event.preventDefault();
             event.stopPropagation();
         } else {
-            alert("seems good");
             submit_form();
         }
         form.classList.add('was-validated');
@@ -171,11 +170,9 @@ function add_meeting(event_idx) {
 
 
 
-
+// TODO add more validation to this thing. 
 function submit_form() {
     let res = {};
-
-    res.csrfmiddlewaretoken = $('#tracking-form input[name=csrfmiddlewaretoken]').val();
 
     res.name = $("#id_name").val();
     res.start_date = $("#id_start_date").val();
@@ -225,19 +222,10 @@ function submit_form() {
         res[`event_${counter ++}`] = event_data;
     });
     
-    // Done compiling all form data.
-    
-    console.log(res);
+    // Done compiling all form data. Store the form data into a hidden field.
+    $("#id_json_data").val(JSON.stringify(res));
 
-    $.ajax({
-        type: 'POST',
-        url: $('#tracking-form').prop('action'),
-        data: res,
-        // success: updateMapMarkers,
-        // error: updateError
-    });
-
-    // success function should redirect to elsewhere. 
+    // The form should submit now...
 }
 
 

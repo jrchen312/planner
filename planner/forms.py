@@ -8,8 +8,10 @@ class TrackingBlockForm(forms.Form):
     end_date = forms.DateField()
 
     name = forms.CharField()
-    
+
     timezone = forms.CharField()
+    json_data = forms.CharField()
+
 
     
 

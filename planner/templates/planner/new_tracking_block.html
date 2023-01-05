@@ -19,6 +19,15 @@
 <form action="{% url 'new-tracking-block' %}" method="POST" class="container-sm mx-auto needs-validation" style="max-width:800px;" id="tracking-form" novalidate>
     {% csrf_token %}
 
+    {% if hacking %}
+        <br>
+        <div class="alert alert-danger" role="alert">
+            The server has detected that you are tampering with the internal fields. 
+            Stop trying to hack. If you think this message is incorrect, please contact 
+            the server owner. 
+        </div>
+    {% endif %}
+
     <h2 class="my-3">New Tracking Block</h2>
 
     <!-- General information -->
@@ -47,6 +56,7 @@
 
     <!-- Keep track of timezone here as hidden field. -->
     {{ form.timezone.as_hidden }}
+    {{ form.json_data.as_hidden }}
     
     <!-- placeholder for everything else -->
     <div id="form-placement" data-index="0"></div>

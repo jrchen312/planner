@@ -1,12 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from planner.forms import TrackingBlockForm
 from planner.models import Profile, TrackingBlock, Event, CalendarItem
 import datetime
 import zoneinfo
+import json
 
 # Create your views here.
 
 # Process request post data. 
+# Data is a dictionary with all of the results necessary. 
 def _process_new_block(data):
     name = data["name"]
     start_date = datetime.date.fromisoformat(data["start_date"])
@@ -23,13 +26,11 @@ def _process_new_block(data):
 
     meeting_days = [list() for _ in range(7)]
 
-    number_events = int(data["number_events"])
-    for event_num in range(number_events):
-        event_key_str = f"event_{event_num}"
-        # event = data[f"event_{event_num}"]
+    for event_num in range(data["number_events"]):
+        event = data[f"event_{event_num}"]
 
-        event_name= data[event_key_str + "[name]"]
-        event_color = data[event_key_str + "[color]"]
+        event_name = event["name"]
+        event_color = event["color"]
 
         new_event = Event.objects.create(
             block = new_block,
@@ -38,21 +39,20 @@ def _process_new_block(data):
             currently_tracking = None,
         )
 
-        number_meetings = int(data[event_key_str + "[number_meetings]"])
-        for meeting_num in range(number_meetings):
-            meeting_key_str = event_key_str + f"[meeting_{meeting_num}]"
+        for meeting_num in range(event["number_meetings"]):
+            meeting = event[f"meeting_{meeting_num}"]
 
-            start_time = data[meeting_key_str + "[start_time]"]
-            end_time = data[meeting_key_str + "[end_time]"]
-            location = data[meeting_key_str + "[location]"]
+            start_time = meeting["start_time"]
+            end_time = meeting["end_time"]
+            location = meeting["location"]
 
-            mon = (data[meeting_key_str + "[mon]"]) == "true"
-            tues = (data[meeting_key_str + "[tues]"]) == "true"
-            wed = (data[meeting_key_str + "[wed]"]) == "true"
-            thurs = (data[meeting_key_str + "[thurs]"]) == "true"
-            fri = (data[meeting_key_str + "[fri]"]) == "true"
-            sat = (data[meeting_key_str + "[sat]"]) == "true"
-            sun = (data[meeting_key_str + "[sun]"]) == "true"
+            mon = (meeting["mon"])
+            tues = (meeting["tues"])
+            wed = (meeting["wed"])
+            thurs = (meeting["thurs"])
+            fri = (meeting["fri"])
+            sat = (meeting["sat"])
+            sun = (meeting["sun"])
 
             meeting_info = {
                 "start_time": start_time,
@@ -69,8 +69,6 @@ def _process_new_block(data):
             if fri: meeting_days[4].append(meeting_info)
             if sat: meeting_days[5].append(meeting_info)
             if sun: meeting_days[6].append(meeting_info)
-
-    print(meeting_days)
 
     # Iterate through each day from start_date to end_date.
     # If the day of week is in mon/tues, then create 
@@ -109,14 +107,19 @@ def _process_new_block(data):
 
 # new tracking block page
 def new_tracking_block(request):
-    if request.method == 'POST':
-        print(request.POST.dict())
-        print()
-        print(request.POST.dict().keys())
-        _process_new_block(request.POST)
-        print("DONE ! ")
-
     form = TrackingBlockForm()
+
+    if request.method == 'POST':
+        data = json.loads(request.POST["json_data"])
+        try:
+            _process_new_block(data)
+            return redirect(reverse("timer"))
+
+        except Exception as e:
+            print(e)
+
+            return render(request, "planner/new_tracking_block.html", 
+                          {"form":form, "hacking":True})
 
     return render(request, "planner/new_tracking_block.html", {"form":form})
 
