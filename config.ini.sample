@@ -1,0 +1,16 @@
+# If you need to generate a new secret key, use the get_random_secret_key() function:
+#    from django.core.management.utils import get_random_secret_key
+#    print(get_random_secret_key())
+# Warning: The % character is special to ConfigParser - use %% if your secret has % chars
+# Warning: Changing secret keys invalidates  existing sessions, so may need to delete your DB
+
+[Django]
+Secret: <django-secret-goes-here>
+
+
+# Generate the GoogleOAuth2 keys at https://console.cloud.google.com
+
+[GoogleOAuth2]
+Key: <google-oauth2-key>
+Secret: <google-oauth2-secret>
+
