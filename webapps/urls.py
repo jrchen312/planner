@@ -14,13 +14,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from planner.views import *
+from django.urls import path, include
+
+import planner.views as planner_views
+import planner.urls as planner_urls
+
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+    # admin 
     path('admin/', admin.site.urls),
-    
-    path('', timer, name="timer"),
-    path('schedule/', schedule, name="schedule"),
-    path('new/', new_tracking_block, name="new-tracking-block"),
+
+    # home page:
+    path('', planner_views.timer, name="timer"),
+
+    # Planner app:
+    path('planner/', include(planner_urls)),
+
+    # is this necessary??
+    path('oauth/', include('social_django.urls', namespace='social')),
+    path('logout', auth_views.logout_then_login, name='logout'),
 ]
