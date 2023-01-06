@@ -1,23 +1,48 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
 from planner.forms import TrackingBlockForm
 from planner.models import Profile, TrackingBlock, Event, CalendarItem
+
 import datetime
 import zoneinfo
 import json
 
-# Create your views here.
+
+# Oauth checker thing
+# Problems arise if you try to switch a different acount while one account is 
+# already logged in. 
+def _known_user_check(action_function):
+    def my_wrapper_function(request, *args, **kwargs):
+
+        if 'picture' not in request.session:
+            request.session['picture'] = request.user.social_auth.get(provider='google-oauth2').extra_data['picture']
+
+        try:
+            User.objects.get(id=request.user.id).profile
+        except:
+            print("Making a new profile...")
+            Profile.objects.create(user = request.user, picture = request.session['picture'])
+
+        return action_function(request, *args, **kwargs)
+
+    return my_wrapper_function
+
+
 
 # Process request post data. 
 # Data is a dictionary with all of the results necessary. 
-def _process_new_block(data):
+def _process_new_block(profile, data):
     name = data["name"]
     start_date = datetime.date.fromisoformat(data["start_date"])
     end_date = datetime.date.fromisoformat(data["end_date"])
     timezone = data["timezone"]
 
     new_block = TrackingBlock.objects.create(
-        profile = None, # TODO replace this. 
+        profile = profile, # TODO replace this. 
         start = start_date,
         end = end_date,
         name = name,
@@ -106,13 +131,16 @@ def _process_new_block(data):
 
 
 # new tracking block page
+@login_required
+@_known_user_check
 def new_tracking_block(request):
     form = TrackingBlockForm()
 
     if request.method == 'POST':
         data = json.loads(request.POST["json_data"])
         try:
-            _process_new_block(data)
+            profile = User.objects.get(id=request.user.id).profile
+            _process_new_block(profile, data)
             return redirect(reverse("timer"))
 
         except Exception as e:
@@ -123,9 +151,12 @@ def new_tracking_block(request):
 
     return render(request, "planner/new_tracking_block.html", {"form":form})
 
-
+@login_required
+@_known_user_check
 def timer(request):
     return render(request, "planner/timer.html", {})
 
+@login_required
+@_known_user_check
 def schedule(request):
     return render(request, "planner/schedule.html", {})
