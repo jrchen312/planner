@@ -35,6 +35,8 @@ function add_event() {
     // Increment to update the value.
     $("#form-placement").data("index", event_idx+1);
     
+    let rand_color = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+
     // template for the new Event. 
     // don't forget about the delete button :p. 
     let new_div = `
@@ -63,7 +65,7 @@ function add_event() {
                         <div class="position-relative">
                             <div class="position-absolute top-0 end-0">
                                 <label for="id_color_${event_idx}" class="form-label">Color</label>
-                                <input type="color" class="form-control no-validate-color form-control-color" id="id_color_${event_idx}" name="color_${event_idx}" value="#563d7c" title="Choose a color for the event">
+                                <input type="color" class="form-control no-validate-color form-control-color" id="id_color_${event_idx}" name="color_${event_idx}" value="${rand_color}" title="Choose a color for the event">
                             </div>
                         </div>
                     </div>
