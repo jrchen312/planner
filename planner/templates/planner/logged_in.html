@@ -7,15 +7,32 @@
 {% block scripts %}
 <script>
     $( document ).ready(function() {
-        window.close();
+        const bc = new BroadcastChannel("planner_oauth_ch");
+        
+        // have user look at the spinning wheel for 2 at least a second.
+        setTimeout(function() {
+            bc.postMessage("done");
+            bc.close();
+            window.close();
+        }, 1500);
     })
 </script>
 {% endblock %}
 
 
+{% block header %}
+{% include "planner/subtemplates/header.html" with disable_header="true" %}
+{% endblock %}
+
+
 {% block body %}
 
-<h1>Trying to load</h1>
+    <div class="text-center my-5">
+        <h2>Successfully logged in. Redirecting...</h2>
+        <div class="spinner-border text-success my-3" style="width: 6rem; height: 6rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 
 {% endblock %}
 

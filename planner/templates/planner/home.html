@@ -4,23 +4,30 @@
 
 {% block scripts %}
 <script>
-    var pollTimer;
-
-    function check_oauth_done() {
-        $.get("{% url 'check-logged-in' %}", function(data, status) {
-            if (data.in) {
-                window.clearInterval(pollTimer);
-                window.location.href = "{% url 'timer' %}"
-            }
-        })
-    }
+    // var pollTimer;
+    // function check_oauth_done() {
+    //     $.get("{% url 'check-logged-in' %}", function(data, status) {
+    //         if (data.in) {
+    //             window.clearInterval(pollTimer);
+    //             window.location.href = "{% url 'timer' %}"
+    //         }
+    //     })
+    // }
 
     function oauth() {
+        const bc = new BroadcastChannel("planner_oauth_ch");
+
         var win = window.open('/oauth/login/google-oauth2/', '_blank', 'height=570,width=520,status=1');
-        
-        pollTimer = window.setInterval(function() {
-            check_oauth_done();
-        }, 1500);
+       
+        bc.onmessage = (event) => {
+            if (event.data == "done") {
+                bc.close()
+                window.location.href = "{% url 'timer' %}"
+            }
+        };
+        // pollTimer = window.setInterval(function() {
+        //     check_oauth_done();
+        // }, 2500);
     }
 
     // remove the login button. 
