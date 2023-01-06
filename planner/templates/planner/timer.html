@@ -8,6 +8,16 @@
 
 {% block body %}
 <div class="container-sm" style="max-width:800px;">
+    <h2>zzz</h2>
+    <img src="{{ request.session.picture }}" alt="User profile picture">
+
+    <a class='btn btn-primary' href="{% url 'logout' %}">{{ request.user }} {{request.user.id}}</a>
+    
+    <li>
+        <a class="btn" href="" 
+            onclick="window.open('{% url 'social:begin' 'GoogleOAuth2' %}', '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');">
+    <span class="glyphicon glyphicon-user"></span> Sign In</a></li>
+
 
     <h2 class="mt-3">Timers</h2>
 

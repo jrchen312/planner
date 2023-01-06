@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.http import HttpResponse
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -18,8 +19,12 @@ import json
 def _known_user_check(action_function):
     def my_wrapper_function(request, *args, **kwargs):
 
+        
         if 'picture' not in request.session:
-            request.session['picture'] = request.user.social_auth.get(provider='google-oauth2').extra_data['picture']
+            try:
+                request.session['picture'] = request.user.social_auth.get(provider='google-oauth2').extra_data['picture']
+            except:
+                request.session['picture'] = "z"
 
         try:
             User.objects.get(id=request.user.id).profile
@@ -160,3 +165,25 @@ def timer(request):
 @_known_user_check
 def schedule(request):
     return render(request, "planner/schedule.html", {})
+
+# page that closes the window
+def logged_in(request):
+    return render(request, "planner/logged_in.html", {})
+
+
+def check_logged_in(request):
+    res = {
+        "in": False if (request.user.id == None) else True
+    }
+
+    response_json = json.dumps(res, default=str)
+    return HttpResponse(response_json, content_type='application/json')
+
+
+def home(request):
+    if not request.session.session_key:
+        request.session.create()
+
+    print(request.session.session_key)
+
+    return render(request, "planner/home.html", {})

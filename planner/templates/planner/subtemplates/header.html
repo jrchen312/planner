@@ -2,35 +2,40 @@
 <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
 
     <div class="container-fluid container-md" style="max-width:1000px;">
-        <a class="navbar-brand" href="#">Timer App</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                
-                <!-- Timer -->
-                {% if page == "timer" %}
-                    <a class="nav-link active" aria-current="page" href="{% url 'timer' %}">Timer</a>
-                {% else %}
-                    <a class="nav-link" href="{% url 'timer' %}">Timer</a>
-                {% endif %}
-
-                <!-- Schedule -->
-                {% if page == "schedule" %}
-                    <a class="nav-link active" aria-current="page" href="{% url 'schedule' %}">Schedule</a>
-                {% else %}
-                    <a class="nav-link" href="{% url 'schedule' %}">Schedule</a>
-                {% endif %}
+        <a class="navbar-brand" href="{% url 'planner-home' %}">Timer App</a>
 
 
-                <!-- Trends -->
-                {% if page == "trends" %}
-                    <a class="nav-link active" aria-current="page" href="#">Trends</a>
-                {% else %}
-                    <a class="nav-link" href="#">Trends</a>
-                {% endif %}
+        {% if disable_header != "true" %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    
+                    <!-- Timer -->
+                    {% if page == "timer" %}
+                        <a class="nav-link active" aria-current="page" href="{% url 'timer' %}">Timer</a>
+                    {% else %}
+                        <a class="nav-link" href="{% url 'timer' %}">Timer</a>
+                    {% endif %}
+
+                    <!-- Schedule -->
+                    {% if page == "schedule" %}
+                        <a class="nav-link active" aria-current="page" href="{% url 'schedule' %}">Schedule</a>
+                    {% else %}
+                        <a class="nav-link" href="{% url 'schedule' %}">Schedule</a>
+                    {% endif %}
+
+
+                    <!-- Trends -->
+                    {% if page == "trends" %}
+                        <a class="nav-link active" aria-current="page" href="#">Trends</a>
+                    {% else %}
+                        <a class="nav-link" href="#">Trends</a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 </nav>

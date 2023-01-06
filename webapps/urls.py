@@ -26,7 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # home page:
-    path('', planner_views.timer, name="timer"),
+    path('', planner_views.home, name="planner-home"),
 
     # Planner app:
     path('planner/', include(planner_urls)),
@@ -34,4 +34,5 @@ urlpatterns = [
     # is this necessary??
     path('oauth/', include('social_django.urls', namespace='social')),
     path('logout', auth_views.logout_then_login, name='logout'),
+    # path('complete/<str:backend>/', planner_views.complete, name='complete'),
 ]

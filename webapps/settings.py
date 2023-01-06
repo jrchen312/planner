@@ -144,7 +144,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {'prompt': 'select_account'}
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['fullname', 'picture']
 
 # Used by the @login_required decorator to redirect to the login action
-LOGIN_URL = '/oauth/login/google-oauth2/'
+LOGIN_URL = '/'
 
 # Default URL to redirect to after a user logs in.
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/planner/logged-in/'

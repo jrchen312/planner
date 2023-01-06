@@ -1,0 +1,58 @@
+{% extends "planner/base.html" %}
+
+{% block title %}Planner Home{% endblock %}
+
+{% block scripts %}
+<script>
+    var pollTimer;
+
+    function check_oauth_done() {
+        $.get("{% url 'check-logged-in' %}", function(data, status) {
+            if (data.in) {
+                window.clearInterval(pollTimer);
+                window.location.href = "{% url 'timer' %}"
+            }
+        })
+    }
+
+    function oauth() {
+        var win = window.open('/oauth/login/google-oauth2/', '_blank', 'height=570,width=520,status=1');
+        
+        pollTimer = window.setInterval(function() {
+            check_oauth_done();
+        }, 1500);
+    }
+
+    // remove the login button. 
+    $(document).ready(function () {
+        $.get("{% url 'check-logged-in' %}", function(data, status) {
+            if (!data.in) {
+                $("#login-btn").removeClass("hidden");
+            } else {
+                $("#timer-btn").removeClass("hidden");
+                $("#login-btn").remove();
+            }
+        })
+    });
+</script>
+{% endblock %}
+
+{% block header %}
+{% include "planner/subtemplates/header.html" with disable_header="true" %}
+{% endblock %}
+
+
+{% block body %}
+<div class="container-sm" style="max-width:800px;">
+    <h2>Planner Application</h2>
+    <p>Time is valuable! The goal of this planner is to provide a tool for a user to keep track of
+        the tasks they need to do, as well as provide a convenient and efficient 
+        method of keeping track of how much time they spend on what. 
+    </p>
+
+    <button id="login-btn" class="btn btn-primary hidden" onclick="oauth();">Log in</button>
+
+    <a class="btn btn-success hidden" id="timer-btn" href="{% url 'timer' %}">Go to timer</a>
+
+</div>
+{% endblock %}
