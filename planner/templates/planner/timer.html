@@ -17,7 +17,7 @@
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon">Tracking Block</span>
                 <input disabled type="text" class="form-control" id="current-tracking-block" aria-describedby="basic-addon" style="background-color:white"
-                    {% if no_tracking_blocks %}value="---"{% else %} value="{{ block.name }}" {% endif %}
+                    {% if curr_block %} value="{{ curr_block.name }}" {% else %} value="---" {% endif %}
                 >
             </div>
 
@@ -25,10 +25,10 @@
         <div class="col-md">
             <div class="position-relative">
                 <div class="position-absolute top-0 end-0" style="white-space: nowrap;">
-                    {% if no_tracking_blocks %}
-                        <button disabled class="btn btn-primary" id="new-block-btn"><i class="bi bi-pencil-square"></i> Edit</button>
+                    {% if curr_block %}
+                    <a href="#" class="btn btn-primary" id="new-block-btn"><i class="bi bi-pencil-square"></i> Edit</a>
                     {% else %}
-                        <a href="#" class="btn btn-primary" id="new-block-btn"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <button disabled class="btn btn-primary" id="new-block-btn"><i class="bi bi-pencil-square"></i> Edit</button>
                     {% endif %}
                     <a href="{% url 'new-tracking-block' %}" class="btn btn-primary" id="edit-block-btn"><i class="bi bi-file-earmark-plus"></i> New</a>
                 </div>
@@ -37,7 +37,40 @@
     </div>
 
 
-    {% if no_tracking_blocks %}
+    {% if curr_block %}
+        <!-- Placeholder -->
+        <div id="event-cards" class="mt-5">
+            {% for event in events %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ event.name }}</h5>
+
+                        <div class="row">
+                            <div class="col">
+                                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                <label for="vehicle1"> I have a bike</label><br>
+                                <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+                                <label for="vehicle2"> I have a car</label><br>
+                                <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                                <label for="vehicle3"> I have a boat</label><br><br>
+                            </div>
+                            <div class="col">
+                                {% if event.currently_tracking %}
+                                    <button class="btn btn-danger">End Session</button>
+                                    <div class="card-text">
+                                        Elapsed time: <span id="elapsed-time-span">20:12</span>
+                                    </div>
+                                {% else %}
+                                    <button class="btn btn-success">Start a session</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- No tracking blocks (yet) -->
         <div id="event-cards" class="mt-5">
             <div class="card mb-2">
                 <div class="card-body">
@@ -46,46 +79,9 @@
                 </div>
             </div>
         </div>
-    {% else %}
-        <!-- Placeholder -->
-        <div id="event-cards" class="mt-5"></div>
     {% endif %}
 
-    <!-- Example... -->
-    <div class="card mb-2">
-        <div class="card-body">
-            <h5 class="card-title">15-210</h5>
-            <div class="row">
-                <div class="col">
-                    <p class="card-text">
-                        Time allotted this week: 10 hours
-                    </p>
-                </div>
-                <div class="col">
-                    <button class="btn btn-success">Start a session</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">18-240</h5>
-            <div class="row">
-                <div class="col">
-                    <p class="card-text">
-                        Time allotted this week: 23 hours
-                    </p>
-                </div>
-                <div class="col">
-                    <button class="btn btn-danger">End Session</button>
-                    <div class="card-text">
-                        Elapsed time: <span id="elapsed-time-span">20:12</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
 
 </div>
 {% endblock %}

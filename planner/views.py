@@ -54,6 +54,9 @@ def _process_new_block(profile, data):
         timezone = timezone,
     )
 
+    profile.current_tracking_block = new_block
+    profile.save()
+
     meeting_days = [list() for _ in range(7)]
 
     for event_num in range(data["number_events"]):
@@ -161,17 +164,15 @@ def new_tracking_block(request):
 def timer(request):
     profile = request.user.profile
 
-    no_tracking_blocks = (len(profile.tracking_blocks.all()) == 0)
     current_block = profile.current_tracking_block
     events = []
 
-    if not no_tracking_blocks:
+    if current_block != None:
         sorted_events = current_block.events.all().order_by('-update_time')
         events = [e for e in sorted_events]
 
     context = {
-        "no_tracking_blocks": no_tracking_blocks,
-        "block": current_block,
+        "curr_block": current_block,
         "events": events,
     }
 
