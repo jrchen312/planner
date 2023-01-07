@@ -14,23 +14,31 @@
     //     })
     // }
 
-    function oauth() {
-        const bc = new BroadcastChannel("planner_oauth_ch");
+    function oauth_login() {
+        // Check if we are already logged in.
+        $.get("{% url 'check-logged-in' %}", function(data, status) {
+            if (data.in) {
+                window.location.href = "{% url 'timer' %}";
+            } else {
+                const bc = new BroadcastChannel("planner_oauth_ch");
 
-        var win = window.open('/oauth/login/google-oauth2/', '_blank', 'height=570,width=520,status=1');
-       
-        bc.onmessage = (event) => {
-            if (event.data == "done") {
-                bc.close()
-                window.location.href = "{% url 'timer' %}"
+                var win = window.open('/oauth/login/google-oauth2/', '_blank', 'height=570,width=520,status=1');
+            
+                bc.onmessage = (event) => {
+                    if (event.data == "done") {
+                        bc.close();
+                        window.location.href = "{% url 'timer' %}";
+                    }
+                };
             }
-        };
+        });
+
         // pollTimer = window.setInterval(function() {
         //     check_oauth_done();
         // }, 2500);
     }
 
-    // remove the login button. 
+    // remove the login button if we are already logged in. 
     $(document).ready(function () {
         $.get("{% url 'check-logged-in' %}", function(data, status) {
             if (!data.in) {
@@ -39,7 +47,7 @@
                 $("#timer-btn").removeClass("hidden");
                 $("#login-btn").remove();
             }
-        })
+        });
     });
 </script>
 {% endblock %}
@@ -57,7 +65,7 @@
         method of keeping track of how much time they spend on what. 
     </p>
 
-    <button id="login-btn" class="btn btn-primary hidden" onclick="oauth();">Log in</button>
+    <button id="login-btn" class="btn btn-primary hidden" onclick="oauth_login();">Log in</button>
 
     <a class="btn btn-success hidden" id="timer-btn" href="{% url 'timer' %}">Go to timer</a>
 
