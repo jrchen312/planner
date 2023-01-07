@@ -9,6 +9,8 @@ class Profile(models.Model):
     picture         = models.FileField()
     content_type    = models.CharField(max_length=50)
 
+    current_tracking_block = models.OneToOneField('TrackingBlock', on_delete=models.CASCADE, related_name="+", null=True)
+
 
 class TrackingBlock(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tracking_blocks", null=True)
@@ -29,6 +31,8 @@ class Event(models.Model):
     name = models.CharField(max_length=200)
 
     currently_tracking = models.OneToOneField('CalendarItem', on_delete=models.CASCADE, related_name="+", null=True)
+
+    update_time = models.DateTimeField(auto_now=True)
     
 
 class CalendarItem(models.Model):

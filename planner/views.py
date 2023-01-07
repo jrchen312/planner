@@ -159,23 +159,46 @@ def new_tracking_block(request):
 @login_required
 @_known_user_check
 def timer(request):
-    return render(request, "planner/timer.html", {})
+    profile = request.user.profile
+
+    no_tracking_blocks = (len(profile.tracking_blocks.all()) == 0)
+    current_block = profile.current_tracking_block
+    events = []
+
+    if not no_tracking_blocks:
+        sorted_events = current_block.events.all().order_by('-update_time')
+        events = [e for e in sorted_events]
+
+    context = {
+        "no_tracking_blocks": no_tracking_blocks,
+        "block": current_block,
+        "events": events,
+    }
+
+    print(context)
+    return render(request, "planner/timer.html", context)
 
 @login_required
 @_known_user_check
 def schedule(request):
     return render(request, "planner/schedule.html", {})
 
+@login_required
+@_known_user_check
+def profile(request):
+    return render(request, "planner/profile.html", {})
+
 # page that closes the window
 def logged_in(request):
     return render(request, "planner/logged_in.html", {})
 
 
+# useful ajax point. 
 def check_logged_in(request):
-    res = {
-        "in": False if (request.user.id == None) else True
-    }
-
+    # res = {
+    #     "in": False if (request.user.id == None) else True
+    # }
+    res = { "in": request.user.is_authenticated }
     response_json = json.dumps(res, default=str)
     return HttpResponse(response_json, content_type='application/json')
 
