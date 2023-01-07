@@ -19,9 +19,6 @@ import json
 def _known_user_check(action_function):
     def my_wrapper_function(request, *args, **kwargs):
 
-        assert(request.user.is_authenticated)
-        print(request.user.email)
-
         if 'picture' not in request.session:
             try:
                 request.session['picture'] = request.user.social_auth.get(provider='google-oauth2').extra_data['picture']
