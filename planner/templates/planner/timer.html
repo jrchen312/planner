@@ -2,6 +2,10 @@
 
 {% block title %}Timer{% endblock %}
 
+{% block scripts %}
+<script src="../../static/planner/timer.js"></script>
+{% endblock %}
+
 {% block header %}
 {% include "planner/subtemplates/header.html" with page="timer" %}
 {% endblock %}
@@ -10,6 +14,8 @@
 <div class="container-sm" style="max-width:800px;">
 
     <h2 class="mt-3">Timers</h2>
+
+    <div id="timer-errors"></div>
 
     <div class="row g-1">
         <div class="col-md-9">
@@ -47,22 +53,45 @@
 
                         <div class="row">
                             <div class="col">
-                                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-                                <label for="vehicle1"> I have a bike</label><br>
-                                <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
-                                <label for="vehicle2"> I have a car</label><br>
-                                <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-                                <label for="vehicle3"> I have a boat</label><br><br>
+                                {% for todo in event.todo_list.all %}
+                                    {% if todo.finished %}
+                                        <input type="checkbox" id="todo{{ todo.id }}" data-id="{{ todo.id }}" checked>
+                                        <label for="todo{{ todo.id }}">{{ todo.contents }}</label>
+                                    {% else %}
+                                        <input type="checkbox" id="todo{{ todo.id }}" data-id="{{ todo.id }}">
+                                        <label for="todo{{ todo.id }}">{{ todo.contents }}</label>
+                                    {% endif %}
+                                    
+                                {% endfor %}
+                                <input type="text" id="new_todo_{{ todo.id }}">
+                                <button class="btn btn-primary">Add</button>
                             </div>
-                            <div class="col">
-                                {% if event.currently_tracking %}
-                                    <button class="btn btn-danger">End Session</button>
+
+                            <!-- Timer + buttons.  -->
+                            <div class="col" id="event-timer-{{ event.id }}">
+
+                                <div id="end-timer-div-{{ event.id }}"
+                                    {% if not event.currently_tracking %} class="hidden" {% endif %}>
+
+                                    <button id="end-timer-{{ event.id }}"
+                                            class="btn btn-danger end-btn"
+                                            onclick="endd_timer({{ event.id }}); return false;">End Session
+                                    </button>
+
                                     <div class="card-text">
-                                        Elapsed time: <span id="elapsed-time-span">20:12</span>
+                                        Elapsed time: <span id="elapsed-time-{{ event.id }}">0</span>
                                     </div>
-                                {% else %}
-                                    <button class="btn btn-success">Start a session</button>
-                                {% endif %}
+                                </div>
+
+                                <div id="start-timer-div-{{ event.id }}"
+                                    {% if event.currently_tracking %} class="hidden" {% endif %}>
+
+                                    <button id="start-timer-{{ event.id }}" 
+                                            class="btn btn-success start-btn" 
+                                            onclick="start_timer({{ event.id }}); return false;">Start a session
+                                    </button>
+
+                                </div>
                             </div>
                         </div>
                     </div>

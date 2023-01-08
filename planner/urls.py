@@ -5,6 +5,7 @@ from planner.views import *
 urlpatterns = [
     # AJAX
     path('check-logged-in/', check_logged_in, name="check-logged-in"),
+    path('start-timer/<int:event_id>/', start_timer, name="start-timer"),
 
     # Pages
     path('', home, name="planner-home"),

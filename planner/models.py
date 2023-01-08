@@ -6,10 +6,11 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class Profile(models.Model):
     user            = models.OneToOneField(User, on_delete=models.PROTECT, related_name="profile")
-    picture         = models.FileField()
-    content_type    = models.CharField(max_length=50)
+    picture         = models.CharField(max_length=200) #holds a link to google url. 
 
+    # settings
     current_tracking_block = models.OneToOneField('TrackingBlock', on_delete=models.CASCADE, related_name="+", null=True)
+    current_timezone = models.CharField(max_length=100, null=True)
 
 
 class TrackingBlock(models.Model):
@@ -19,7 +20,7 @@ class TrackingBlock(models.Model):
     end = models.DateField()
 
     name = models.CharField(max_length=200)
-    timezone = models.CharField(max_length=200)
+    timezone = models.CharField(max_length=200, null=True)
     
     description = models.CharField(max_length=500, blank=True)
 
@@ -34,6 +35,15 @@ class Event(models.Model):
 
     update_time = models.DateTimeField(auto_now=True)
     
+
+class ToDoListElement(models.Model):
+    block = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="todo_list")
+    contents = models.CharField(max_length=300)
+
+    finished = models.BooleanField(default=False)
+
+    update_time = models.DateTimeField(auto_now=True)
+
 
 class CalendarItem(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="calendar_items")

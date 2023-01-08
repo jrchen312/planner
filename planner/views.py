@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from planner.forms import TrackingBlockForm
 from planner.models import Profile, TrackingBlock, Event, CalendarItem
 
+from django.utils import timezone
 import datetime
 import zoneinfo
 import json
@@ -45,8 +46,13 @@ def _process_new_block(profile, data):
     end_date = datetime.date.fromisoformat(data["end_date"])
     timezone = data["timezone"]
 
+    # Save a new timezone to the profile if need be. 
+    if profile.current_timezone == None:
+        profile.current_timezone = timezone
+        profile.save()
+
     new_block = TrackingBlock.objects.create(
-        profile = profile, # TODO replace this. 
+        profile = profile,
         start = start_date,
         end = end_date,
         name = name,
@@ -157,6 +163,82 @@ def new_tracking_block(request):
                           {"form":form, "hacking":True})
 
     return render(request, "planner/new_tracking_block.html", {"form":form})
+
+
+@login_required
+@_known_user_check
+def get_timer_startend(request, event_id):
+    profile = request.user.profile
+
+    response = {"ok": True, "reason":"", "start":"", "end":""}
+
+    # get the event, if it exists
+    try:
+        event = Event.objects.get(id=event_id)
+    except:
+        response["ok"] = False
+        response["reason"] = "Event ID not found, stop hacking"
+    
+    # Make sure there is something being tracked
+    if response["ok"]:
+        if event.currently_tracking == None:
+            response["ok"] = False
+            response["reason"] = "Currently tracked event not found"
+
+    # Get start time, convert it to the user's timezone. 
+    # Get the curent time as end time, convert it to the user's timezone. 
+    if response["ok"]:
+        timezone_tz = zoneinfo.ZoneInfo(profile.current_timezone)
+
+        s = event.currently_tracking.startTime
+        s_converted = s.astimezone(timezone_tz)
+
+        # i think this is the right format needed. 
+        response["start_time"] = s_converted.strftime("%H:%M:%S")
+        response["start_date"] = s_converted.strftime("%Y-%m-%d")
+
+        e = timezone.now()
+        e_converted = e.astimezone(timezone_tz)
+        response["end_time"]
+        response["end_date"]
+        
+
+
+@login_required
+@_known_user_check
+def start_timer(request, event_id):
+    profile = request.user.profile
+
+    response = {"ok": True, "reason": "", "event": event_id}
+
+    event = Event.objects.get(id=event_id)
+
+    # Check that the profile actually made the event. 
+    if (profile.id != event.block.profile.id):
+        # print("different user, can't do this, stop hacking, ratio. ")
+        response["ok"] = False
+        response["reason"] = "You didn't make this event, stop hacking."
+
+
+    # Check that there are no other events currently being tracked in the block.
+    if response["ok"]:
+        for ev in event.block.events.all():
+            if ev.currently_tracking != None:
+                response["ok"] = False
+                response["reason"] = f"You can only track one event at a time, and {ev.name} still has something ongoing."
+    
+    # Everything is ok, go ahead, make the element...
+    cal = CalendarItem.objects.create(
+        event=event,
+        startTime=timezone.now()
+    )
+    event.currently_tracking = cal;
+    event.save()
+
+    # Should be good to go
+    response_json = json.dumps(response, default=str)
+    return HttpResponse(response_json, content_type='application/json')
+
 
 @login_required
 @_known_user_check
