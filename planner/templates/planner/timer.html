@@ -42,10 +42,53 @@
         </div>
     </div>
 
+    
+    <!-- Modal -->
+    <div class="modal fade" id="duration-confirmation-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Confirm Duration</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label for="modal-start-times">Start Time</label>
+                    <div class="row" id="modal-start-times" class="mb-3">
+                        <div class="col">
+                            <input type="date" class="form-control" id="modal-start-date">
+                        </div>
+                        <div class="col">
+                            <input type="time" class="form-control" id="modal-start-time">
+                        </div>
+                    </div>
+
+                    <label for="modal-end-times" class="mt-3">End Time</label>
+                    <div class="row" id="modal-end-times">
+                        <div class="col">
+                            <input type="date" class="form-control" id="modal-end-date">
+                        </div>
+                        <div class="col">
+                            <input type="time" class="form-control" id="modal-end-time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="delete_timer();">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" onclick="save_timer();">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     {% if curr_block %}
-        <!-- Placeholder -->
-        <div id="event-cards" class="mt-5">
+        <div id="event-cards" class="mt-5" 
+            data-current-block="{{ current_tracked_ev }}"
+            data-current-length="{{ current_length }}"
+            >
             {% for event in events %}
                 <div class="card mb-2">
                     <div class="card-body">
@@ -55,15 +98,15 @@
                             <div class="col">
                                 {% for todo in event.todo_list.all %}
                                     {% if todo.finished %}
-                                        <input type="checkbox" id="todo{{ todo.id }}" data-id="{{ todo.id }}" checked>
+                                        <input type="checkbox" id="todo{{ todo.id }}" data-id="{{ todo.id }}" class="form-control" checked>
                                         <label for="todo{{ todo.id }}">{{ todo.contents }}</label>
                                     {% else %}
-                                        <input type="checkbox" id="todo{{ todo.id }}" data-id="{{ todo.id }}">
+                                        <input type="checkbox" id="todo{{ todo.id }}" data-id="{{ todo.id }}" class="form-control">
                                         <label for="todo{{ todo.id }}">{{ todo.contents }}</label>
                                     {% endif %}
                                     
                                 {% endfor %}
-                                <input type="text" id="new_todo_{{ todo.id }}">
+                                <input type="text" id="new_todo_{{ todo.id }}" class="form-control">
                                 <button class="btn btn-primary">Add</button>
                             </div>
 
@@ -75,7 +118,7 @@
 
                                     <button id="end-timer-{{ event.id }}"
                                             class="btn btn-danger end-btn"
-                                            onclick="endd_timer({{ event.id }}); return false;">End Session
+                                            onclick="end_timer({{ event.id }}); return false;">End Session
                                     </button>
 
                                     <div class="card-text">

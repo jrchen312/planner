@@ -170,7 +170,7 @@ def new_tracking_block(request):
 def get_timer_startend(request, event_id):
     profile = request.user.profile
 
-    response = {"ok": True, "reason":"", "start":"", "end":""}
+    response = {"ok": True, "reason":""}
 
     # get the event, if it exists
     try:
@@ -188,7 +188,7 @@ def get_timer_startend(request, event_id):
     # Get start time, convert it to the user's timezone. 
     # Get the curent time as end time, convert it to the user's timezone. 
     if response["ok"]:
-        timezone_tz = zoneinfo.ZoneInfo(profile.current_timezone)
+        timezone_tz = zoneinfo.ZoneInfo("America/Denver") #profile.current_timezone
 
         s = event.currently_tracking.startTime
         s_converted = s.astimezone(timezone_tz)
@@ -199,8 +199,11 @@ def get_timer_startend(request, event_id):
 
         e = timezone.now()
         e_converted = e.astimezone(timezone_tz)
-        response["end_time"]
-        response["end_date"]
+        response["end_time"] = e_converted.strftime("%H:%M:%S")
+        response["end_date"] = e_converted.strftime("%Y-%m-%d")
+    
+    response_json = json.dumps(response,default=str)
+    return HttpResponse(response_json, content_type='application/json')
         
 
 
@@ -248,27 +251,59 @@ def timer(request):
     current_block = profile.current_tracking_block
     events = []
 
+    currently_tracked_ev = 0
+    current_length = 0 # length of currently tracking block. 
+
     if current_block != None:
         sorted_events = current_block.events.all().order_by('-update_time')
         events = [e for e in sorted_events]
 
+        # Find the "first" currently tracked event. (well, there should only be one)
+        for ev in events:
+            if ev.currently_tracking != None:
+                currently_tracked_ev = ev.id
+
+                # profile.current_timezone
+                timezone_tz = zoneinfo.ZoneInfo("America/Denver")
+
+                s = ev.currently_tracking.startTime
+                s_converted = s.astimezone(timezone_tz)
+
+                e = timezone.now()
+                e_converted = e.astimezone(timezone_tz)
+
+                # Calculate the time delta in number of seconds...
+                time_delta = e_converted - s_converted
+                time_delta_s = time_delta.total_seconds()
+
+                current_length = time_delta_s * 1000
+                # current_length = divmod(time_delta_s, 60)[0] * 60 * 1000
+                break
+
     context = {
         "curr_block": current_block,
         "events": events,
+
+        "current_tracked_ev": currently_tracked_ev,
+        "current_length": current_length,
     }
 
-    print(context)
     return render(request, "planner/timer.html", context)
+
+
+
 
 @login_required
 @_known_user_check
 def schedule(request):
     return render(request, "planner/schedule.html", {})
 
+
 @login_required
 @_known_user_check
 def profile(request):
     return render(request, "planner/profile.html", {})
+
 
 # page that closes the window
 def logged_in(request):

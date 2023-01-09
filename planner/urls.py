@@ -6,6 +6,7 @@ urlpatterns = [
     # AJAX
     path('check-logged-in/', check_logged_in, name="check-logged-in"),
     path('start-timer/<int:event_id>/', start_timer, name="start-timer"),
+    path('timer-startend/<int:event_id>/', get_timer_startend, name="get-timer-startend"),
 
     # Pages
     path('', home, name="planner-home"),
