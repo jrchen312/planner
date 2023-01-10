@@ -32,7 +32,23 @@ function msToTime(s) {
     var mins = s % 60;
     var hrs = (s - mins) / 60;
   
-    return hrs + ':' + mins + ':' + secs;
+    var result = "";
+    if (hrs != 0) {
+        if (hrs == 1) {
+            result += `${hrs} hr, `;
+        } else {
+            result += `${hrs} hrs, `;
+        }
+    }
+    if (mins != 0) {
+        if (mins == 1) {
+            result += `${mins} min, `;
+        } else {
+            result += `${mins} mins, `;
+        }
+    }
+    return result + `${secs} secs`;
+    // return hrs + ':' + mins + ':' + secs;
   }
 
 
@@ -66,7 +82,7 @@ function initialize_timer() {
 
     stopwatch_interval = setInterval(function () {
         let time_elapsed = (performance.now() - t0) + curr_duration;
-        $(stopwatch_time).html(`Time elapsed: ${msToTime(time_elapsed)}`);
+        $(stopwatch_time).html(msToTime(time_elapsed));
     }, 1000);
 }
 
@@ -123,6 +139,12 @@ function timer_startend(data) {
 function delete_timer() {
     // delete event.currently_tracking
     // clear event.currently_tracking
+
+    contents = {
+        delete: true,
+    };
+
+    stop_timer_request(contents);
 }
 
 
@@ -131,12 +153,59 @@ function delete_timer() {
 function save_timer() {
     // submit the form to the server and have it update the 
     // calendar item end date + remove the event.currently_tracking
-    
-    // pretty simple honestly. 
+
+    contents = {
+        delete: false,
+
+        start_date: $("#modal-start-date").val(),
+        start_time: $("#modal-start-time").val(),
+        
+        end_date: $("#modal-end-date").val(),
+        end_time: $("#modal-end-time").val(),
+    };
+
+    stop_timer_request(contents);
 }
 
 // can reload the page here, can not reload the page as well
 // (which is the preference...)
-function reset_page() {
+function stop_timer_request(contents) {
 
+    contents.event_id = parseInt($("#event-cards").data("current-block"));
+
+    request = {
+        csrfmiddlewaretoken:$('#modal-response-form input[name=csrfmiddlewaretoken]').val(),
+        contents: JSON.stringify(contents)
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: $("#modal-response-form").prop("action"),
+        data: request,
+
+        success: resetPage,
+        error: ajax_error,
+    });
+}
+
+function resetPage(response) {
+    $("#duration-confirmation-modal").modal('toggle');
+
+    if (!response.ok) {
+        ajax_error(response.reason);
+    }
+
+    let event_id = $("#event-cards").data("current-block");
+
+    // change the button back to normal.
+    $(`#start-timer-div-${event_id}`).removeClass("hidden");
+    $(`#end-timer-div-${event_id}`).addClass("hidden");
+    
+    // enable the rest of the buttons again. 
+    $(".start-btn").attr('disabled', false);
+
+    // Clear misc. metadata.
+    $("#event-cards").data("current-block", 0);
+    $("#event-cards").data("current-length", 0);
+    clearInterval(stopwatch_interval);
 }

@@ -167,6 +167,58 @@ def new_tracking_block(request):
 
 @login_required
 @_known_user_check
+def stop_timer(request):
+    profile = request.user.profile
+    data = json.loads(request.POST["contents"])
+
+    event_id = data["event_id"]
+    response = {"ok": True, "reason": ""}
+    event = Event.objects.get(id=event_id)
+
+    # Check that the profile actually made the event. 
+    if (profile.id != event.block.profile.id):
+        response["ok"] = False
+        response["reason"] = "You didn't make this event, stop hacking."
+
+
+    if data["delete"]:
+        
+        if response["ok"]:
+            event.currently_tracking.delete()
+            event.currently_tracking = None
+            event.save()
+    
+    else:
+        if response["ok"]:
+            start_date = datetime.date.fromisoformat(data["start_date"])
+            start_time = datetime.time.fromisoformat(data["start_time"])
+
+            end_date = datetime.date.fromisoformat(data["end_date"])
+            end_time = datetime.time.fromisoformat(data["end_time"])
+
+            timezone_tz = zoneinfo.ZoneInfo(profile.current_timezone) #profile.timezone
+
+            s_datetime = datetime.datetime(start_date.year, start_date.month, 
+                                           start_date.day, start_time.hour,
+                                           start_time.minute, tzinfo=timezone_tz)
+
+            e_datetime = datetime.datetime(end_date.year, end_date.month, 
+                                           end_date.day, end_time.hour,
+                                           end_time.minute, tzinfo=timezone_tz)
+            
+            event.currently_tracking.startTime = s_datetime
+            event.currently_tracking.endTime = e_datetime
+            event.currently_tracking.save()
+            event.currently_tracking = None
+            event.save()
+            
+
+    response_json = json.dumps(response,default=str)
+    return HttpResponse(response_json, content_type='application/json')
+
+
+@login_required
+@_known_user_check
 def get_timer_startend(request, event_id):
     profile = request.user.profile
 
@@ -188,7 +240,7 @@ def get_timer_startend(request, event_id):
     # Get start time, convert it to the user's timezone. 
     # Get the curent time as end time, convert it to the user's timezone. 
     if response["ok"]:
-        timezone_tz = zoneinfo.ZoneInfo("America/Denver") #profile.current_timezone
+        timezone_tz = zoneinfo.ZoneInfo(profile.current_timezone)
 
         s = event.currently_tracking.startTime
         s_converted = s.astimezone(timezone_tz)
@@ -263,8 +315,7 @@ def timer(request):
             if ev.currently_tracking != None:
                 currently_tracked_ev = ev.id
 
-                # profile.current_timezone
-                timezone_tz = zoneinfo.ZoneInfo("America/Denver")
+                timezone_tz = zoneinfo.ZoneInfo(profile.current_timezone)
 
                 s = ev.currently_tracking.startTime
                 s_converted = s.astimezone(timezone_tz)

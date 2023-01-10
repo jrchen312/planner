@@ -8,6 +8,8 @@ urlpatterns = [
     path('start-timer/<int:event_id>/', start_timer, name="start-timer"),
     path('timer-startend/<int:event_id>/', get_timer_startend, name="get-timer-startend"),
 
+    path('stop-timer/', stop_timer, name="stop-timer"),
+
     # Pages
     path('', home, name="planner-home"),
     path('logged-in/', logged_in), # redirect url for oauth login. 

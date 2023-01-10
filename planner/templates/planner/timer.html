@@ -53,6 +53,10 @@
                 </div>
 
                 <div class="modal-body">
+                    <form action="{% url 'stop-timer' %}" method="POST" id="modal-response-form">
+                        {% csrf_token %}
+                    </form>
+
                     <label for="modal-start-times">Start Time</label>
                     <div class="row" id="modal-start-times" class="mb-3">
                         <div class="col">
@@ -152,8 +156,6 @@
             </div>
         </div>
     {% endif %}
-
-    
 
 </div>
 {% endblock %}
