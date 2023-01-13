@@ -209,6 +209,10 @@ def stop_timer(request):
                                            end_date.day, end_time.hour,
                                            end_time.minute, tzinfo=timezone_tz)
             
+            if s_datetime == e_datetime:
+                delta = datetime.timedelta(minutes=1)
+                e_datetime += delta
+                
             event.currently_tracking.startTime = s_datetime
             event.currently_tracking.endTime = e_datetime
             event.currently_tracking.save()
@@ -362,8 +366,6 @@ def get_schedule_items(request, start_date, end_date):
 
     start_date = datetime.date.fromisoformat(start_date)
     end_date = datetime.date.fromisoformat(end_date)
-
-    tz = profile.current_timezone
 
     if profile.current_tracking_block:
         for event in profile.current_tracking_block.events.all():

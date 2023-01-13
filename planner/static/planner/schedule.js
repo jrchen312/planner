@@ -21,14 +21,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // calendar.addEvent(asdf);
         },
 
-        events: [
-            {
-            id: 'a',
-            title: 'my event',
-            start: '2022-12-14T22:35:00-05:00', 
-            end: '2022-12-15T00:00:00-05:00'
-            }
-        ]
+        eventClick: function(info) {
+
+            console.log('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+
+        
+
+        }
     });
     calendar.render();
 
@@ -71,7 +70,6 @@ function updateCalendar() {
 
 function add_calendar_items(items) {
     $(items).each(function() {
-        console.log(this)
 
         calendar.addEvent({
             title: this.title,

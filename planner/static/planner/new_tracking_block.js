@@ -223,7 +223,6 @@ function submit_form() {
             meeting_data.description = $(`#id_description-${event_idx}-${meeting_idx}`).val();
             meeting_data.location = $(`#id_location-${event_idx}-${meeting_idx}`).val();
 
-            console.log(meeting_data);
             event_data[`meeting_${meeting_counter ++}`] = meeting_data;
         });
         
