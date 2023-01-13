@@ -49,6 +49,7 @@ class CalendarItem(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="calendar_items")
 
     location = models.CharField(blank=True, max_length=200)
+    description = models.CharField(blank=True, max_length=200)
 
     startTime = models.DateTimeField()
     endTime = models.DateTimeField(null=True)

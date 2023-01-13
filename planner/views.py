@@ -352,6 +352,42 @@ def schedule(request):
 
 @login_required
 @_known_user_check
+def get_schedule_items(request, start_date, end_date):
+    profile = request.user.profile
+
+    response = []
+
+    start_date = datetime.date.fromisoformat(start_date)
+    end_date = datetime.date.fromisoformat(end_date)
+
+    tz = profile.current_timezone
+
+    if profile.current_tracking_block:
+        for event in profile.current_tracking_block.events.all():
+            a = len(event.calendar_items.all())
+            cal_items = event.calendar_items.all().filter(
+                startTime__gte=start_date,
+                endTime__lte=end_date
+            )
+            
+            for cal_item in cal_items:
+                response.append({
+                    "location": cal_item.location,
+                    "description": cal_item.description,
+
+                    "startTime": cal_item.startTime.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                    "endTime":cal_item.endTime.strftime("%Y-%m-%dT%H:%M:%S%z"),
+
+                    "color": event.color,
+                })
+
+    # Should be good to go
+    response_json = json.dumps(response, default=str)
+    return HttpResponse(response_json, content_type='application/json')
+
+
+@login_required
+@_known_user_check
 def profile(request):
     return render(request, "planner/profile.html", {})
 
