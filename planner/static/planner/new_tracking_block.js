@@ -104,6 +104,11 @@ function add_meeting(event_idx) {
     let new_div = `
         <div id="event-${event_idx}-meeting-${meeting_idx}" class="card my-5 text-bg-light" data-meeting-index="${meeting_idx}">
             <div class="card-body">
+            
+                <div class="col-12 mb-3">
+                    <label for="id_description-${event_idx}-${meeting_idx}" class="form-label">Description</label>
+                    <input type="text" name="description-${event_idx}-${meeting_idx}" class="form-control" id="id_description-${event_idx}-${meeting_idx}" required>
+                </div>
 
                 <div class="row mb-3">
                     <div class="col-6">
@@ -215,8 +220,10 @@ function submit_form() {
             meeting_data.sat = $(`#id_sat-${event_idx}-${meeting_idx}`).prop('checked');
             meeting_data.sun = $(`#id_sun-${event_idx}-${meeting_idx}`).prop('checked');
 
+            meeting_data.description = $(`#id_description-${event_idx}-${meeting_idx}`).val();
             meeting_data.location = $(`#id_location-${event_idx}-${meeting_idx}`).val();
 
+            console.log(meeting_data);
             event_data[`meeting_${meeting_counter ++}`] = meeting_data;
         });
         

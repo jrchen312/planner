@@ -74,7 +74,7 @@ function add_calendar_items(items) {
         console.log(this)
 
         calendar.addEvent({
-            title: "15210 lecture, DOH 2315",
+            title: this.title,
             start: this.startTime,
             end: this.endTime,
             backgroundColor: this.color,

@@ -82,6 +82,7 @@ def _process_new_block(profile, data):
 
             start_time = meeting["start_time"]
             end_time = meeting["end_time"]
+            description = meeting["description"]
             location = meeting["location"]
 
             mon = (meeting["mon"])
@@ -96,6 +97,7 @@ def _process_new_block(profile, data):
                 "start_time": start_time,
                 "end_time": end_time,
                 "location": location,
+                "description": description,
 
                 "event": new_event,
             }
@@ -135,6 +137,7 @@ def _process_new_block(profile, data):
             CalendarItem.objects.create(
                 event = meeting["event"],
                 location = meeting["location"],
+                description = meeting["description"],
                 startTime = s_datetime,
 
                 endTime = e_datetime)
@@ -371,7 +374,11 @@ def get_schedule_items(request, start_date, end_date):
             )
             
             for cal_item in cal_items:
+                title = f"{event.name} {cal_item.description}"
                 response.append({
+                    "id": cal_item.id,
+
+                    "title": title,
                     "location": cal_item.location,
                     "description": cal_item.description,
 
