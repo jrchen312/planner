@@ -82,12 +82,27 @@ function add_calendar_items(items) {
 }
 
 
-function ajax_error(error) {
-    console.log("some sort of server error or something");
+function ajax_error(jqXHR, exception) {
+    var msg = '';
+    if (jqXHR.status === 0) {
+        msg = 'Not connect. Verify Network.';
+    } else if (jqXHR.status == 404) {
+        msg = 'Requested page not found. [404]';
+    } else if (jqXHR.status == 500) {
+        msg = 'Internal Server Error [500].';
+    } else if (exception === 'parsererror') {
+        msg = 'Requested JSON parse failed.';
+    } else if (exception === 'timeout') {
+        msg = 'Time out error.';
+    } else if (exception === 'abort') {
+        msg = 'Ajax request aborted.';
+    } else {
+        msg = 'Uncaught Error. ' + jqXHR.responseText;
+    }
 
     $("#schedule-errors").html(`
         <div class="alert alert-danger" role="alert">
-            Something went wrong... probably a connection problem. Server response: ${error}
+            Something went wrong... probably a connection problem. Server response: ${msg}
         </div>
     `);
 }

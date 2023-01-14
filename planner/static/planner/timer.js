@@ -10,6 +10,11 @@ $(document).ready(function () {
     if ($("#event-cards").data("current-block") != 0){
         initialize_timer()
     }
+
+    $(".todo-list-item").change(function(e, f) {
+        console.log($(this).checked);
+        console.log($(this).data("id"));
+    })
 })
 
 
@@ -87,12 +92,27 @@ function initialize_timer() {
 }
 
 
-function ajax_error(error) {
-    console.log("some sort of server error or something");
+function ajax_error(jqXHR, exception) {
+    var msg = '';
+    if (jqXHR.status === 0) {
+        msg = 'Not connect. Verify Network.';
+    } else if (jqXHR.status == 404) {
+        msg = 'Requested page not found. [404]';
+    } else if (jqXHR.status == 500) {
+        msg = 'Internal Server Error [500].';
+    } else if (exception === 'parsererror') {
+        msg = 'Requested JSON parse failed.';
+    } else if (exception === 'timeout') {
+        msg = 'Time out error.';
+    } else if (exception === 'abort') {
+        msg = 'Ajax request aborted.';
+    } else {
+        msg = 'Uncaught Error. ' + jqXHR.responseText;
+    }
 
     $("#timer-errors").html(`
         <div class="alert alert-danger" role="alert">
-            Something went wrong... probably a connection problem. Server response: ${error}
+            Something went wrong... probably a connection problem. Server response: ${msg}
         </div>
     `);
 }
@@ -212,3 +232,57 @@ function resetPage(response) {
     $("#event-cards").data("current-length", 0);
     clearInterval(stopwatch_interval);
 }
+
+
+/*
+    If textarea is not empty...
+    submit to server -> if request is ok:
+        add the todo item to the list.
+        clear text
+    -> else:
+        alert user.
+*/
+function addTodo(event_id) {
+    let text = $(`#new_todo_${event_id}`).val()
+    if (text.length == 0) {
+        return;
+    }
+    $(`#todo-add-btn-${event_id}`).attr('disabled', true);
+
+    data = {
+        text: text,
+        event_id: event_id,
+    }
+
+    request = {
+        csrfmiddlewaretoken:$('#modal-response-form input[name=csrfmiddlewaretoken]').val(),
+        contents: JSON.stringify(data)
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: $("#event-cards").data("todolist-add-url"),
+        data: request,
+
+        success: update_todo,
+        error: (function (jqXHR, exception) {
+            $(`#todo-add-btn-${event_id}`).attr('disabled', false);
+            ajax_error(jqXHR, exception);
+        }),
+    });
+}
+
+
+function update_todo(data) {
+    $(`#todo-list-${data.event_id}`).append(`
+    <div class="form-check">
+        <input class="form-check-input todo-list-item" type="checkbox" id="todo-${data.todo_id}" data-id="${data.todo_id}">
+        <label class="form-check-label" for="todo-${data.todo_id}">${data.contents}</label>
+    </div>
+    `);
+
+    $(`#todo-add-btn-${data.event_id}`).attr('disabled', false);
+
+    $(`#new_todo_${data.event_id}`).val("");
+}
+

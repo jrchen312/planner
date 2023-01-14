@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from planner.forms import TrackingBlockForm
-from planner.models import Profile, TrackingBlock, Event, CalendarItem
+from planner.models import Profile, TrackingBlock, Event, CalendarItem, ToDoListElement
 
 from django.utils import timezone
 import datetime
@@ -144,6 +144,28 @@ def _process_new_block(profile, data):
 
         # Go to the next date. 
         start_date += delta
+
+
+@login_required
+@_known_user_check
+def add_todolist(request):
+    contents = json.loads(request.POST["contents"])
+
+    event = Event.objects.get(id=contents["event_id"])
+
+    todo = ToDoListElement.objects.create(
+        event=event,
+        contents=contents["text"],
+    )
+    response = {
+        "ok": True, 
+        "contents": contents["text"], 
+        "event_id": event.id,
+        "todo_id": todo.id
+    }
+
+    response_json = json.dumps(response, default=str)
+    return HttpResponse(response_json, content_type='application/json')
 
 
 # new tracking block page

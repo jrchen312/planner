@@ -37,7 +37,7 @@ class Event(models.Model):
     
 
 class ToDoListElement(models.Model):
-    block = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="todo_list")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="todo_list")
     contents = models.CharField(max_length=300)
 
     finished = models.BooleanField(default=False)

@@ -9,6 +9,7 @@ urlpatterns = [
     path('timer-startend/<int:event_id>/', get_timer_startend, name="get-timer-startend"),
     path('get-schedule-items/<str:start_date>/<str:end_date>/', get_schedule_items),
     path('stop-timer/', stop_timer, name="stop-timer"),
+    path('add-todo-element/', add_todolist, name="add-todolist"),
 
     # Pages
     path('', home, name="planner-home"),

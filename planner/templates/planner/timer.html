@@ -32,7 +32,7 @@
             <div class="position-relative">
                 <div class="position-absolute top-0 end-0" style="white-space: nowrap;">
                     {% if curr_block %}
-                    <a href="#" class="btn btn-primary" id="new-block-btn"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a href="#" class="btn btn-primary" id="new-block-btn"><i class="bi bi-pencil-square"></i> Edit</a>
                     {% else %}
                         <button disabled class="btn btn-primary" id="new-block-btn"><i class="bi bi-pencil-square"></i> Edit</button>
                     {% endif %}
@@ -95,6 +95,7 @@
         <div id="event-cards" class="mt-5" 
             data-current-block="{{ current_tracked_ev }}"
             data-current-length="{{ current_length }}"
+            data-todolist-add-url="{% url 'add-todolist' %}"
             >
             {% for event in events %}
                 <div class="card mb-2">
@@ -103,18 +104,22 @@
 
                         <div class="row">
                             <div class="col">
-                                {% for todo in event.todo_list.all %}
-                                    {% if todo.finished %}
-                                        <input type="checkbox" id="todo{{ todo.id }}" data-id="{{ todo.id }}" class="form-control" checked>
-                                        <label for="todo{{ todo.id }}">{{ todo.contents }}</label>
-                                    {% else %}
-                                        <input type="checkbox" id="todo{{ todo.id }}" data-id="{{ todo.id }}" class="form-control">
-                                        <label for="todo{{ todo.id }}">{{ todo.contents }}</label>
-                                    {% endif %}
-                                    
-                                {% endfor %}
-                                <input type="text" id="new_todo_{{ todo.id }}" class="form-control">
-                                <button class="btn btn-primary">Add</button>
+                                <div id="todo-list-{{ event.id }}">
+                                    {% for todo in event.todo_list.all %}
+                                        <div class="form-check">
+                                            <input class="form-check-input todo-list-item" type="checkbox" id="todo-{{ todo.id }}" data-id="{{ todo.id }}"
+                                             {% if todo.finished %} checked {% endif %}>
+                                            <label class="form-check-label" for="todo-{{ todo.id }}">{{ todo.contents }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+
+                                <div class="input-group mb-3">
+                                    <textarea class="form-control" id="new_todo_{{ event.id }}" name="new-item" placeholder="Add task"></textarea>
+                                    <button class="btn btn-outline-secondary" onclick="addTodo({{ event.id }});return false;" id="todo-add-btn-{{ event.id }}">Add</button>
+                                </div>
+
                             </div>
 
                             <!-- Timer + buttons.  -->
