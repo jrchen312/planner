@@ -12,12 +12,51 @@ $(document).ready(function () {
     }
 
     $(".todo-list-item").change(function(e, f) {
-        console.log($(this).checked);
-        console.log($(this).data("id"));
+        // console.log($(this).prop('checked'));
+
+        let todo_id = $(this).data("id");
+
+        $(`#todo-${todo_id}`).attr('disabled', true);
+
+        data = {
+            todo_id: todo_id,
+        }
+    
+        request = {
+            csrfmiddlewaretoken:$('#modal-response-form input[name=csrfmiddlewaretoken]').val(),
+            contents: JSON.stringify(data)
+        };
+    
+        $.ajax({
+            type: 'POST',
+            url: $("#event-cards").data("check-todolist-url"),
+            data: request,
+    
+            success: check_todo_item,
+            error: (function (jqXHR, exception) {
+                $(`#todo-${todo_id}`).attr('disabled', false);
+                ajax_error(jqXHR, exception);
+            }),
+        });
     })
 })
 
 
+// serves AJAX request from server when uesr clicks on a checkbox. 
+function check_todo_item(result) {
+
+    $(`#todo-${result.todo_id}`).prop('checked', result.contents);
+    $(`#todo-${result.todo_id}`).attr('disabled', false);
+
+    if (result.contents) {
+        $(`#todo-${result.todo_id}-label`).addClass("checked-item");
+    } else {
+        $(`#todo-${result.todo_id}-label`).removeClass("checked-item");
+    }
+}
+
+
+// When user clicks the start timer button under one of the events. 
 function start_timer(event) {
     // Should first send a request to server for the server
     // to gauge if it is a good idea to start a request or not.
@@ -29,6 +68,9 @@ function start_timer(event) {
 
 }
 
+
+// Converts number of milliseconds to seconds
+// formats the result into a string. s
 function msToTime(s) {
     var ms = s % 1000;
     s = (s - ms) / 1000;
@@ -57,6 +99,7 @@ function msToTime(s) {
   }
 
 
+// Success function for starting a timer for an event. 
 function start_timer_success(data) {
     if (!data.ok) {
         // show error, return
@@ -64,13 +107,14 @@ function start_timer_success(data) {
         return;
     }
 
-    // Remove the start button and show the other stuff. 
+    // Set Event_ID data value. 
     $("#event-cards").data("current-block", data.event);
 
     initialize_timer();
 }
 
 
+// Initializes a timer with an interval. 
 function initialize_timer() {
     let event_id = $("#event-cards").data("current-block")
     let curr_duration = parseFloat($("#event-cards").data("current-length"))
@@ -124,6 +168,7 @@ function server_error(reason) {
         </div>
     `);
 }
+
 
 function end_timer(event) {
 
@@ -277,7 +322,7 @@ function update_todo(data) {
     $(`#todo-list-${data.event_id}`).append(`
     <div class="form-check">
         <input class="form-check-input todo-list-item" type="checkbox" id="todo-${data.todo_id}" data-id="${data.todo_id}">
-        <label class="form-check-label" for="todo-${data.todo_id}">${data.contents}</label>
+        <label class="form-check-label" for="todo-${data.todo_id}" id="todo-${data.todo_id}-label">${data.contents}</label>
     </div>
     `);
 

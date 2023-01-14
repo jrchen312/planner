@@ -168,6 +168,26 @@ def add_todolist(request):
     return HttpResponse(response_json, content_type='application/json')
 
 
+@login_required
+@_known_user_check
+def check_todolist_item(request):
+    contents = json.loads(request.POST["contents"])
+
+    todo = ToDoListElement.objects.get(id=contents["todo_id"])
+
+    todo.finished = not todo.finished
+    todo.save()
+
+    response = {
+        "ok": True,
+        "contents": todo.finished,
+        "todo_id": todo.id,
+    }
+
+    response_json = json.dumps(response, default=str)
+    return HttpResponse(response_json, content_type='application/json')
+
+
 # new tracking block page
 @login_required
 @_known_user_check

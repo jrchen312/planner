@@ -96,6 +96,7 @@
             data-current-block="{{ current_tracked_ev }}"
             data-current-length="{{ current_length }}"
             data-todolist-add-url="{% url 'add-todolist' %}"
+            data-check-todolist-url="{% url 'check-todolist' %}"
             >
             {% for event in events %}
                 <div class="card mb-2">
@@ -109,7 +110,10 @@
                                         <div class="form-check">
                                             <input class="form-check-input todo-list-item" type="checkbox" id="todo-{{ todo.id }}" data-id="{{ todo.id }}"
                                              {% if todo.finished %} checked {% endif %}>
-                                            <label class="form-check-label" for="todo-{{ todo.id }}">{{ todo.contents }}</label>
+                                            <label for="todo-{{ todo.id }}" id="todo-{{ todo.id }}-label"
+                                                   class="form-check-label {% if todo.finished %}checked-item{% endif %}">
+                                                   {{ todo.contents }}
+                                            </label>
                                         </div>
                                     {% endfor %}
                                 </div>
