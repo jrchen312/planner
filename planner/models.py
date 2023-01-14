@@ -31,7 +31,7 @@ class Event(models.Model):
     color = models.CharField(max_length=100)
     name = models.CharField(max_length=200)
 
-    currently_tracking = models.OneToOneField('CalendarItem', on_delete=models.CASCADE, related_name="+", null=True)
+    currently_tracking = models.OneToOneField('CalendarItem', on_delete=models.SET_NULL, related_name="+", null=True)
 
     update_time = models.DateTimeField(auto_now=True)
     
