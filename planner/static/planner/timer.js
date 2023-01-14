@@ -162,6 +162,8 @@ function save_timer() {
         
         end_date: $("#modal-end-date").val(),
         end_time: $("#modal-end-time").val(),
+
+        description: $("#modal-description").val(),
     };
 
     stop_timer_request(contents);
@@ -193,6 +195,7 @@ function resetPage(response) {
 
     if (!response.ok) {
         ajax_error(response.reason);
+        return;
     }
 
     let event_id = $("#event-cards").data("current-block");

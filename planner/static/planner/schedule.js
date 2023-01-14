@@ -69,8 +69,8 @@ function updateCalendar() {
 
 
 function add_calendar_items(items) {
+    console.log(items);
     $(items).each(function() {
-
         calendar.addEvent({
             title: this.title,
             start: this.startTime,

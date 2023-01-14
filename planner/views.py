@@ -185,12 +185,12 @@ def stop_timer(request):
 
 
     if data["delete"]:
-        
+        print(len(CalendarItem.objects.filter(event=event).all()))
         if response["ok"]:
             event.currently_tracking.delete()
             event.currently_tracking = None
             event.save()
-    
+        print(len(CalendarItem.objects.filter(event=event).all()))
     else:
         if response["ok"]:
             start_date = datetime.date.fromisoformat(data["start_date"])
@@ -198,6 +198,8 @@ def stop_timer(request):
 
             end_date = datetime.date.fromisoformat(data["end_date"])
             end_time = datetime.time.fromisoformat(data["end_time"])
+
+            description = data["description"]
 
             timezone_tz = zoneinfo.ZoneInfo(profile.current_timezone) #profile.timezone
 
@@ -212,12 +214,18 @@ def stop_timer(request):
             if s_datetime == e_datetime:
                 delta = datetime.timedelta(minutes=1)
                 e_datetime += delta
-                
-            event.currently_tracking.startTime = s_datetime
-            event.currently_tracking.endTime = e_datetime
-            event.currently_tracking.save()
-            event.currently_tracking = None
-            event.save()
+
+            elif s_datetime > e_datetime:
+                response["ok"] = False
+                response["reason"] = "End date less than start date"
+            
+            else:
+                event.currently_tracking.startTime = s_datetime
+                event.currently_tracking.endTime = e_datetime
+                event.currently_tracking.description = description
+                event.currently_tracking.save()
+                event.currently_tracking = None
+                event.save()
             
 
     response_json = json.dumps(response,default=str)
@@ -253,12 +261,12 @@ def get_timer_startend(request, event_id):
         s_converted = s.astimezone(timezone_tz)
 
         # i think this is the right format needed. 
-        response["start_time"] = s_converted.strftime("%H:%M:%S")
+        response["start_time"] = s_converted.strftime("%H:%M")
         response["start_date"] = s_converted.strftime("%Y-%m-%d")
 
         e = timezone.now()
         e_converted = e.astimezone(timezone_tz)
-        response["end_time"] = e_converted.strftime("%H:%M:%S")
+        response["end_time"] = e_converted.strftime("%H:%M")
         response["end_date"] = e_converted.strftime("%Y-%m-%d")
     
     response_json = json.dumps(response,default=str)
@@ -364,16 +372,20 @@ def get_schedule_items(request, start_date, end_date):
 
     response = []
 
-    start_date = datetime.date.fromisoformat(start_date)
-    end_date = datetime.date.fromisoformat(end_date)
+    timezone_tz = zoneinfo.ZoneInfo(profile.current_timezone)
+
+    start_date = datetime.datetime.fromisoformat(start_date).astimezone(timezone_tz)
+    end_date = datetime.datetime.fromisoformat(end_date).astimezone(timezone_tz)
+
 
     if profile.current_tracking_block:
         for event in profile.current_tracking_block.events.all():
-            a = len(event.calendar_items.all())
+            # print(len(event.calendar_items.all()))
             cal_items = event.calendar_items.all().filter(
                 startTime__gte=start_date,
                 endTime__lte=end_date
             )
+            # print(len(cal_items))
             
             for cal_item in cal_items:
                 title = f"{event.name} {cal_item.description}"
