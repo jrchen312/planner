@@ -23,9 +23,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         eventClick: function(info) {
 
-            console.log('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-
-        
+            // console.log('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+            console.log(info.event.id);
+            console.log(info.event.start);
+            //populate with info.event 
+            
+            $("#info-modal").modal('show');
 
         }
     });
@@ -72,6 +75,7 @@ function add_calendar_items(items) {
     console.log(items);
     $(items).each(function() {
         calendar.addEvent({
+            id: this.id, 
             title: this.title,
             start: this.startTime,
             end: this.endTime,

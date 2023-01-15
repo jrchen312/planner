@@ -359,13 +359,29 @@ def timer(request):
 
     current_block = profile.current_tracking_block
     events = []
-
+    events_context = []
+    
     currently_tracked_ev = 0
     current_length = 0 # length of currently tracking block. 
 
     if current_block != None:
         sorted_events = current_block.events.all().order_by('-update_time')
         events = [e for e in sorted_events]
+
+        delta = datetime.timedelta(days=1)
+        start_date = timezone.now() - delta
+
+        # Build up the todo_items to include. 
+        for ev in events:
+            unfinished = [e for e in ev.todo_list.all().filter(finished=False)]
+            finished = [e for e in ev.todo_list.all().filter(finished=True, 
+                                                 update_time__gte=start_date) ]
+
+            events_context.append({
+                "id": ev.id,
+                "name": ev.name,
+                "todo_list": unfinished + finished,
+            })
 
         # Find the "first" currently tracked event. (well, there should only be one)
         for ev in events:
@@ -390,7 +406,7 @@ def timer(request):
 
     context = {
         "curr_block": current_block,
-        "events": events,
+        "events": events_context,
 
         "current_tracked_ev": currently_tracked_ev,
         "current_length": current_length,

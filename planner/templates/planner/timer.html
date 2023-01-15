@@ -106,7 +106,7 @@
                         <div class="row">
                             <div class="col">
                                 <div id="todo-list-{{ event.id }}">
-                                    {% for todo in event.todo_list.all %}
+                                    {% for todo in event.todo_list %}
                                         <div class="form-check">
                                             <input class="form-check-input todo-list-item" type="checkbox" id="todo-{{ todo.id }}" data-id="{{ todo.id }}"
                                              {% if todo.finished %} checked {% endif %}>
