@@ -5,5 +5,6 @@ migrations
 venv
 my_env
 .idea
+config.ini
 
 images
