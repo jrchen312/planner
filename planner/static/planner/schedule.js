@@ -24,9 +24,13 @@ document.addEventListener('DOMContentLoaded', function() {
         eventClick: function(info) {
 
             // console.log('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-            console.log(info.event.id);
-            console.log(info.event.start);
+
             //populate with info.event 
+            settings = {dateStyle: 'short', timeStyle: 'short'};
+            $("#schedule-modal-start").text(info.event.start.toLocaleString([], settings));
+            $("#schedule-modal-end").text(info.event.end.toLocaleString([], settings));
+
+            $("#schedule-modal-info").text(info.event.title);
             
             $("#info-modal").modal('show');
 

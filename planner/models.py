@@ -12,6 +12,9 @@ class Profile(models.Model):
     current_tracking_block = models.OneToOneField('TrackingBlock', on_delete=models.CASCADE, related_name="+", null=True)
     current_timezone = models.CharField(max_length=100, null=True)
 
+    start_time = models.IntegerField(default=6)
+    todolist_duration = models.IntegerField(default=24)
+
 
 class TrackingBlock(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tracking_blocks", null=True)

@@ -459,6 +459,24 @@ def get_schedule_items(request, start_date, end_date):
 
                     "color": event.color,
                 })
+            
+            # The currently tracking event is filtered out.
+            # this code manually includes it. 
+            if event.currently_tracking:
+                current_time = timezone.now().astimezone(timezone_tz)
+
+                response.append({
+                    "id": event.currently_tracking.id,
+
+                    "title": f"{event.name} - currently tracking",
+                    "location": "",
+                    "description": "",
+
+                    "startTime": event.currently_tracking.startTime.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                    "endTime": current_time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+
+                    "color": event.color,
+                })
 
     # Should be good to go
     response_json = json.dumps(response, default=str)
